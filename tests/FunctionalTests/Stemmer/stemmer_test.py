@@ -33,7 +33,7 @@ class Test_StemmerTest(unittest.TestCase):
         return super(Test_StemmerTest, self).setUp()
 
     def try_stem(self, word, stem):
-        self.assertEquals(stem, self.stemmer.stem(word))
+        self.assertEqual(stem, self.stemmer.stem(word))
 
     def get_test_data(self):
         data = []

@@ -12,8 +12,8 @@ class Test_StopWordRemoverTest(unittest.TestCase):
         self.assertEqual(self.dictionary, self.stopWordRemover.get_dictionary())
 
     def test_removeStopWord(self):
-        self.assertEquals('pergi sekolah', self.stopWordRemover.remove('pergi ke sekolah'))
-        self.assertEquals('makan rumah', self.stopWordRemover.remove('makan di rumah'))
+        self.assertEqual('pergi sekolah', self.stopWordRemover.remove('pergi ke sekolah'))
+        self.assertEqual('makan rumah', self.stopWordRemover.remove('makan di rumah'))
 
 if __name__ == '__main__':
     unittest.main()
