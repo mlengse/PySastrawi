@@ -66,3 +66,5 @@ docs/_build/
 target/
 # Google App Engine generated folder
 appengine-generated/
+# Backup files
+*.backup.*
