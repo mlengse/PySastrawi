@@ -12,17 +12,17 @@ class Test_StemmerTest(unittest.TestCase):
 
     def test_StemReturnImmediatelyOnShortWord(self):
         """Don't stem such a short word (three or fewer characters)"""
-        self.assertEquals('mei', self.stemmer.stem('mei'))
-        self.assertEquals('bui', self.stemmer.stem('bui'))
+        self.assertEqual('mei', self.stemmer.stem('mei'))
+        self.assertEqual('bui', self.stemmer.stem('bui'))
 
     def test_StemReturnImmediatelyIfFoundOnDictionary(self):
         """To prevent overstemming : nilai could have been overstemmed to nila
         if we don't lookup against the dictionary
         """
         self.stemmer.get_dictionary().add('nila')
-        self.assertEquals('nila', self.stemmer.stem('nilai'))
+        self.assertEqual('nila', self.stemmer.stem('nilai'))
         self.stemmer.get_dictionary().add('nilai')
-        self.assertEquals('nilai', self.stemmer.stem('nilai'))
+        self.assertEqual('nilai', self.stemmer.stem('nilai'))
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,5 @@
 import os
+from io import open
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.Stemmer.Stemmer import Stemmer
 from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
@@ -32,12 +33,12 @@ class StemmerFactory(object):
 
     def get_words_from_file(self):
         current_dir = os.path.dirname(os.path.realpath(__file__))
-        dictionaryFile = current_dir + '/data/kata-dasar.txt'
+        dictionaryFile = os.path.join(current_dir, 'data', 'kata-dasar.txt')
         if not os.path.isfile(dictionaryFile):
             raise RuntimeError('Dictionary file is missing. It seems that your installation is corrupted.')
 
         dictionaryContent = ''
-        with open(dictionaryFile, 'r') as f:
+        with open(dictionaryFile, 'r', encoding='utf-8') as f:
             dictionaryContent = f.read()
 
         return dictionaryContent.split('\n')
