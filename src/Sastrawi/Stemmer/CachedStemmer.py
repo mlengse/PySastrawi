@@ -1,6 +1,11 @@
 #from Sastrawi.Stemmer.StemmerInterface import StemmerInterface
 from Sastrawi.Stemmer.Filter import TextNormalizer
 
+try:
+    _string_types = (basestring,)
+except NameError:
+    _string_types = (str,)
+
 class CachedStemmer(object):
     """description of class"""
     def __init__(self, cache, delegatedStemmer):
@@ -8,6 +13,9 @@ class CachedStemmer(object):
         self.delegatedStemmer = delegatedStemmer
 
     def stem(self, text):
+        if not isinstance(text, _string_types):
+            raise TypeError("Text must be a string, received " + str(type(text)))
+
         normalizedText = TextNormalizer.normalize_text(text)
 
         words = normalizedText.split(' ')
