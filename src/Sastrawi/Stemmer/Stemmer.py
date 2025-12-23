@@ -15,6 +15,8 @@ class Stemmer(object):
     @link https://github.com/sastrawi/sastrawi/wiki/Resources
     """
 
+    MAX_CHARACTER_LENGTH = 1000000
+
     _regex_plural_suffix = re.compile(r'^(.*)-(ku|mu|nya|lah|kah|tah|pun)$')
     _regex_plural_split = re.compile(r'^(.*)-(.*)$')
 
@@ -29,6 +31,9 @@ class Stemmer(object):
         """Stem a text string to its common stem form."""
         if not isinstance(text, _string_types):
             raise TypeError("Text must be a string, received " + str(type(text)))
+
+        if len(text) > self.MAX_CHARACTER_LENGTH:
+            raise ValueError("Text length exceeds the maximum allowed length of " + str(self.MAX_CHARACTER_LENGTH) + " characters.")
 
         normalizedText = TextNormalizer.normalize_text(text)
 
