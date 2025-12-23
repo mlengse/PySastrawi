@@ -1,6 +1,6 @@
 import re
 from Sastrawi.Stemmer.Context.Visitor.VisitorProvider import VisitorProvider
-from Sastrawi.Stemmer.Filter import TextNormalizer
+from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 from Sastrawi.Stemmer.Context.Context import Context
 
 class Stemmer(object):
@@ -9,6 +9,10 @@ class Stemmer(object):
 
     @link https://github.com/sastrawi/sastrawi/wiki/Resources
     """
+
+    _regex_plural_suffix = re.compile(r'^(.*)-(ku|mu|nya|lah|kah|tah|pun)$')
+    _regex_plural_split = re.compile(r'^(.*)-(.*)$')
+
     def __init__(self, dictionary):
         self.dictionary = dictionary
         self.visitor_provider = VisitorProvider()
@@ -38,7 +42,7 @@ class Stemmer(object):
     def is_plural(self, word):
         #-ku|-mu|-nya
         #nikmat-Ku, etc
-        matches = re.match(r'^(.*)-(ku|mu|nya|lah|kah|tah|pun)$', word)
+        matches = Stemmer._regex_plural_suffix.match(word)
         if matches:
             return matches.group(1).find('-') != -1
 
@@ -50,7 +54,7 @@ class Stemmer(object):
 
         @link   http://researchbank.rmit.edu.au/eserv/rmit:6312/Asian.pdf
         """
-        matches = re.match(r'^(.*)-(.*)$', plural)
+        matches = Stemmer._regex_plural_split.match(plural)
         #translated from PHP conditional check:
         #if (!isset($words[1]) || !isset($words[2]))
         if not matches:
@@ -60,7 +64,7 @@ class Stemmer(object):
         #malaikat-malaikat-nya -> malaikat malaikat-nya
         suffix = words[1]
         suffixes = ['ku', 'mu', 'nya', 'lah', 'kah', 'tah', 'pun']
-        matches = re.match(r'^(.*)-(.*)$', words[0])
+        matches = Stemmer._regex_plural_split.match(words[0])
         if suffix in suffixes and matches:
             words[0] = matches.group(1)
             words[1] = matches.group(2) + '-' + suffix
@@ -84,4 +88,3 @@ class Stemmer(object):
         context.execute()
 
         return context.result
-

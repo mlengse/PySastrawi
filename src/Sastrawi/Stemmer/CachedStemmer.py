@@ -1,5 +1,5 @@
 #from Sastrawi.Stemmer.StemmerInterface import StemmerInterface
-from Sastrawi.Stemmer.Filter import TextNormalizer
+from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 
 class CachedStemmer(object):
     """description of class"""
