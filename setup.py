@@ -28,11 +28,11 @@ setup(
     long_description='Library for stemming Indonesian (Bahasa) text',
 
     # The project's main homepage.
-    url='https://github.com/har07/PySastrawi',
+    url='https://github.com/mlengse/PySastrawi',
 
     # Author details
-    author='Hanif Amal Robbani',
-    author_email='dev.har07@gmail.com',
+    author='mLengse',
+    author_email='medotsys@gmail.com',
 
     # Choose your license
     license='MIT',
