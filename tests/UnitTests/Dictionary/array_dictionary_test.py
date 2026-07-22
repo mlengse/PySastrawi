@@ -2,10 +2,10 @@ import unittest
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.Dictionary.DictionaryInterface import DictionaryInterface
 
-class Test_ArrayDictionaryTest(unittest.TestCase):
+class TestArrayDictionary(unittest.TestCase):
     def setUp(self):
         self.dictionary = ArrayDictionary()
-        return super(Test_ArrayDictionaryTest, self).setUp()
+        return super().setUp()
 
     def test_add_and_contain(self):
         self.assertFalse(self.dictionary.contains('word'))

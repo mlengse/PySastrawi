@@ -5,7 +5,7 @@ from Sastrawi.Stemmer.Stemmer import Stemmer
 from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
 from Sastrawi.Stemmer.Cache.ArrayCache import ArrayCache
 
-class StemmerFactory(object):
+class StemmerFactory:
     """ Stemmer factory helps creating pre-configured stemmer """
     APC_KEY = 'sastrawi_cache_dictionary'
 
@@ -22,13 +22,6 @@ class StemmerFactory(object):
         return cachedStemmer
 
     def get_words(self, isDev=False):
-        #if isDev or callable(getattr(self, 'apc_fetch')):
-        #    words = self.getWordsFromFile()
-        #else:
-        #    words = apc_fetch(self.APC_KEY)
-        #    if not words:
-        #        words = self.getWordsFromFile()
-        #        apc_store(self.APC_KEY, words)
         return self.get_words_from_file()
 
     def get_words_from_file(self):

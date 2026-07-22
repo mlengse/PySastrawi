@@ -2,7 +2,7 @@ import unittest
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.Stemmer.Stemmer import Stemmer
 
-class Test_StemmerTest(unittest.TestCase):
+class TestStemmer(unittest.TestCase):
     def setUp(self):
         self.dictionary = ArrayDictionary(
             [
@@ -30,7 +30,7 @@ class Test_StemmerTest(unittest.TestCase):
             ]
         )
         self.stemmer = Stemmer(self.dictionary)
-        return super(Test_StemmerTest, self).setUp()
+        return super().setUp()
 
     def try_stem(self, word, stem):
         self.assertEqual(stem, self.stemmer.stem(word))

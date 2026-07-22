@@ -1,9 +1,4 @@
-try:
-    _string_types = (basestring,)
-except NameError:
-    _string_types = (str,)
-
-class StopWordRemover(object):
+class StopWordRemover:
     """description of class"""
 
     MAX_CHARACTER_LENGTH = 1000000
@@ -16,7 +11,7 @@ class StopWordRemover(object):
 
     def remove(self, text):
         """Remove stop words."""
-        if not isinstance(text, _string_types):
+        if not isinstance(text, str):
             raise TypeError("Text must be a string, received " + str(type(text)))
 
         if len(text) > self.MAX_CHARACTER_LENGTH:

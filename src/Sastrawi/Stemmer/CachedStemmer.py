@@ -6,7 +6,7 @@ try:
 except NameError:
     _string_types = (str,)
 
-class CachedStemmer(object):
+class CachedStemmer:
     """description of class"""
     def __init__(self, cache, delegatedStemmer):
         self.cache = cache

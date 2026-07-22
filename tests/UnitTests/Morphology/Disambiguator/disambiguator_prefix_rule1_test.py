@@ -1,11 +1,11 @@
 import unittest
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule1 import DisambiguatorPrefixRule1a, DisambiguatorPrefixRule1b
 
-class Test_DisambiguatorPrefixRule1Test(unittest.TestCase):
+class TestDisambiguatorPrefixRule1(unittest.TestCase):
     def setUp(self):
         self.subject1a = DisambiguatorPrefixRule1a()
         self.subject1b = DisambiguatorPrefixRule1b()
-        return super(Test_DisambiguatorPrefixRule1Test, self).setUp()
+        return super(TestDisambiguatorPrefixRule1, self).setUp()
 
     def test_disambiguate1a(self):
         self.assertEqual('ia-ia', self.subject1a.disambiguate('beria-ia'))

@@ -2,11 +2,11 @@ import unittest
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.StopWordRemover.StopWordRemover import StopWordRemover
 
-class Test_StopWordRemoverTest(unittest.TestCase):
+class TestStopWordRemover(unittest.TestCase):
     def setUp(self):
         self.dictionary = ArrayDictionary(['di', 'ke'])
         self.stopWordRemover = StopWordRemover(self.dictionary)
-        return super(Test_StopWordRemoverTest, self).setUp()
+        return super().setUp()
 
     def test_getDictionaryPreserveInstance(self):
         self.assertEqual(self.dictionary, self.stopWordRemover.get_dictionary())

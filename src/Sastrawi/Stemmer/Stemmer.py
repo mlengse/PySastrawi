@@ -3,12 +3,7 @@ from Sastrawi.Stemmer.Context.Visitor.VisitorProvider import VisitorProvider
 from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 from Sastrawi.Stemmer.Context.Context import Context
 
-try:
-    _string_types = (basestring,)
-except NameError:
-    _string_types = (str,)
-
-class Stemmer(object):
+class Stemmer:
     """Indonesian Stemmer.
     Nazief & Adriani, CS Stemmer, ECS Stemmer, Improved ECS.
 
@@ -29,7 +24,7 @@ class Stemmer(object):
 
     def stem(self, text):
         """Stem a text string to its common stem form."""
-        if not isinstance(text, _string_types):
+        if not isinstance(text, str):
             raise TypeError("Text must be a string, received " + str(type(text)))
 
         if len(text) > self.MAX_CHARACTER_LENGTH:

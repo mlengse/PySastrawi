@@ -5,8 +5,8 @@ Sastrawi Python is a simple python library which allows you to reduce inflected 
 This is Python port of the original [Sastrawi](https://github.com/sastrawi/sastrawi) project written in PHP (credits goes to the original author and contributors of Sastrawi PHP).
 
 
-[![Build Status](https://travis-ci.org/mlengse/PySastrawi.svg?branch=master)](https://travis-ci.org/mlengse/PySastrawi)
-[![Coverage Status](https://coveralls.io/repos/github/har07/PySastrawi/badge.svg?branch=master)](https://coveralls.io/github/mlengse/PySastrawi?branch=master)
+[![Build Status](https://github.com/har07/PySastrawi/workflows/CI/badge.svg)](https://github.com/har07/PySastrawi/actions)
+[![Coverage Status](https://coveralls.io/repos/github/har07/PySastrawi/badge.svg?branch=master)](https://coveralls.io/github/har07/PySastrawi?branch=master)
 [![PyPI version](https://badge.fury.io/py/PySastrawi.svg)](https://badge.fury.io/py/PySastrawi)
 
 Cara Install
@@ -41,9 +41,7 @@ print(stemmer.stem('Mereka meniru-nirukannya'))
 Demo
 --------
 
-Live demo URL : https://pysastrawi-demo.appspot.com/
-
-Repository : https://github.com/har07/pystastrawi-demo
+Live demo URL : https://har07-pysastrawi-demo.hf.space/
 
 Lisensi
 --------
