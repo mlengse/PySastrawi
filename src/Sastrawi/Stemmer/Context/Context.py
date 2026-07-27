@@ -146,17 +146,15 @@ class Context:
             self.current_word = current_word
 
     def is_suffix_removal(self, removal):
-        """Check wether the removed part is a suffix"""
+        """Check whether the removed part is a suffix"""
         return removal.get_affix_type() == 'DS' \
                or removal.get_affix_type() == 'PP' \
                or removal.get_affix_type() == 'P'
 
     def restore_prefix(self):
         """Restore prefix to proceed with ECS loop pengembalian akhiran"""
-        for removal in self.removals:
-            #return the word before precoding (the subject of first prefix removal)
-            self.current_word = removal.get_subject()
-            break
+        if self.removals:
+            self.current_word = self.removals[0].get_subject()
 
         for removal in list(self.removals):
             if removal.get_affix_type() == 'DP':

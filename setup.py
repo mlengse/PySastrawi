@@ -4,8 +4,6 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-# To use a consistent encoding
-from codecs import open
 from os import path
 
 # Always prefer setuptools over distutils
@@ -25,7 +23,8 @@ setup(
     version='1.2.1',
 
     description='Library for stemming Indonesian (Bahasa) text',
-    long_description='Library for stemming Indonesian (Bahasa) text',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
 
     # The project's main homepage.
     url='https://github.com/mlengse/PySastrawi',
@@ -62,6 +61,7 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
 
     # What does your project relate to?

@@ -1,20 +1,20 @@
 #from Sastrawi.Stemmer.StemmerInterface import StemmerInterface
 from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 
-try:
-    _string_types = (basestring,)
-except NameError:
-    _string_types = (str,)
-
 class CachedStemmer:
     """description of class"""
+    MAX_CHARACTER_LENGTH = 1000000
+
     def __init__(self, cache, delegatedStemmer):
         self.cache = cache
         self.delegatedStemmer = delegatedStemmer
 
     def stem(self, text):
-        if not isinstance(text, _string_types):
+        if not isinstance(text, str):
             raise TypeError("Text must be a string, received " + str(type(text)))
+
+        if len(text) > self.MAX_CHARACTER_LENGTH:
+            raise ValueError("Text length exceeds the maximum allowed length of " + str(self.MAX_CHARACTER_LENGTH) + " characters.")
 
         normalizedText = TextNormalizer.normalize_text(text)
 
@@ -25,7 +25,7 @@ class CachedStemmer:
             if self.cache.has(word):
                 stems.append(self.cache.get(word))
             else:
-                stem = self.delegatedStemmer.stem(word)
+                stem = self.delegatedStemmer.stem_word(word)
                 self.cache.set(word, stem)
                 stems.append(stem)
 

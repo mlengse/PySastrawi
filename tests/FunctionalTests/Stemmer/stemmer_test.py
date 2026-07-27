@@ -375,7 +375,8 @@ class TestStemmer(unittest.TestCase):
     def test_All(self):
         data = self.get_test_data()
         for d in data:
-            self.try_stem(d[0], d[1])
+            with self.subTest(word=d[0], expected=d[1]):
+                self.try_stem(d[0], d[1])
         
 
 if __name__ == '__main__':

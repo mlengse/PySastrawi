@@ -1,6 +1,6 @@
 import re
 
-class TextNormalizer(object):
+class TextNormalizer:
     """description of class"""
 
     # Pre-compile regex patterns
@@ -14,5 +14,3 @@ class TextNormalizer(object):
         result = TextNormalizer._regex_normalize_spaces.sub(' ', result)
 
         return result.strip()
-
-normalize_text = TextNormalizer.normalize_text

@@ -10,7 +10,7 @@ No external dependencies — pure stdlib + `re`.
 
 ## Running tests
 
-Uses `unittest` — `nosetests` (referenced in `.travis.yml`) doesn't support Python 3.12+:
+Uses `unittest`:
 
 ```bash
 python -m unittest discover tests -p '*_test*.py' -v
@@ -50,7 +50,3 @@ The base-word dictionary is at `src/Sastrawi/Stemmer/data/kata-dasar.txt`. It is
 ## Visual Studio cruft
 
 `Sastrawi.sln`, `*.pyproj`, and `*.vs/` are Visual Studio artifacts from the original development environment. Ignore them — there is no Python build integration.
-
-## Release
-
-`release.sh` uses `setuptools` + `wheel` + `twine`. Not needed during normal development.

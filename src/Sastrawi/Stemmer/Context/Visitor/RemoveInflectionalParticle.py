@@ -11,7 +11,7 @@ class RemoveInflectionalParticle:
     def visit(self, context):
         result = self.remove(context.current_word)
         if result != context.current_word:
-            removedPart = re.sub(result, '', context.current_word, count=1)
+            removedPart = context.current_word.replace(result, '', 1)
             
             removal = Removal(self, context.current_word, result, removedPart, 'P')
 

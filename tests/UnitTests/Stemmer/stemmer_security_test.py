@@ -17,7 +17,8 @@ class StemmerSecurityTest(unittest.TestCase):
 
     def test_input_within_limit_works(self):
         # Verify that a string within the limit does not raise an error
-        self.stemmer.stem("test")
+        result = self.stemmer.stem("test")
+        self.assertIsInstance(result, str)
 
 if __name__ == '__main__':
     unittest.main()

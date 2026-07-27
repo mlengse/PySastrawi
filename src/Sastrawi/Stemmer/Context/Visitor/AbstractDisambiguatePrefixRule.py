@@ -1,4 +1,3 @@
-import re
 from Sastrawi.Stemmer.Context.Removal import Removal
 
 class AbstractDisambiguatePrefixRule:
@@ -18,7 +17,7 @@ class AbstractDisambiguatePrefixRule:
         if result is None:
             return
 
-        removedPart = re.sub(result, '', context.current_word, count=1)
+        removedPart = context.current_word.replace(result, '', 1)
 
         removal = Removal(self, context.current_word, result, removedPart, 'DP')
 

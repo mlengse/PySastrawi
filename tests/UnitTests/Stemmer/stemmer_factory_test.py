@@ -1,16 +1,16 @@
 import unittest
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-from Sastrawi.Stemmer.Stemmer import Stemmer
+from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
 
 class TestStemmerFactory(unittest.TestCase):
     def setUp(self):
         self.factory = StemmerFactory()
         return super().setUp()
 
-    def test_createStemmerReturnStemmer(self):
+    def test_createStemmerReturnCachedStemmer(self):
         stemmer = self.factory.create_stemmer()
         self.assertIsNotNone(stemmer)
-        #self.assertIsInstance(stemmer, Stemmer)
+        self.assertIsInstance(stemmer, CachedStemmer)
 
     def test_fungsional(self):
         factory = StemmerFactory()
@@ -20,12 +20,13 @@ class TestStemmerFactory(unittest.TestCase):
         expected = 'malaikat'
         output = stemmer.stem(sentence)
 
-        if output != expected:
-            raise AssertionError(str.format('output is {} instead of {}', output, expected))
+        self.assertEqual(expected, output)
 
     def test_getWordsFromFile(self):
         factory = StemmerFactory()
-        factory.get_words_from_file()
+        result = factory.get_words_from_file()
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
 
 if __name__ == '__main__':
     unittest.main()

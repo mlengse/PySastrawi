@@ -7,21 +7,14 @@ class PrecedenceAdjustmentSpecification:
     @link   http://researchbank.rmit.edu.au/eserv/rmit:6312/Asian.pdf
     """
 
+    _rules = [
+        re.compile(r'^be(.*)lah$'),
+        re.compile(r'^be(.*)an$'),
+        re.compile(r'^me(.*)i$'),
+        re.compile(r'^di(.*)i$'),
+        re.compile(r'^pe(.*)i$'),
+        re.compile(r'^ter(.*)i$'),
+    ]
+
     def is_satisfied_by(self, value):
-        regex_rules = [
-            r'^be(.*)lah$',
-            r'^be(.*)an$',
-            r'^me(.*)i$',
-            r'^di(.*)i$',
-            r'^pe(.*)i$',
-            r'^ter(.*)i$',
-        ]
-
-        for rule in regex_rules:
-            if re.match(rule, value):
-                return True
-
-        return False
-
-
-
+        return any(rule.match(value) for rule in self._rules)

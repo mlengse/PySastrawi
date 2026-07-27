@@ -1,5 +1,4 @@
 import os
-from io import open
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.Stemmer.Stemmer import Stemmer
 from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
@@ -7,12 +6,11 @@ from Sastrawi.Stemmer.Cache.ArrayCache import ArrayCache
 
 class StemmerFactory:
     """ Stemmer factory helps creating pre-configured stemmer """
-    APC_KEY = 'sastrawi_cache_dictionary'
 
-    def create_stemmer(self, isDev=False):
+    def create_stemmer(self):
         """ Returns Stemmer instance """
 
-        words = self.get_words(isDev)
+        words = self.get_words()
         dictionary = ArrayDictionary(words)
         stemmer = Stemmer(dictionary)
 
@@ -21,7 +19,7 @@ class StemmerFactory:
 
         return cachedStemmer
 
-    def get_words(self, isDev=False):
+    def get_words(self):
         return self.get_words_from_file()
 
     def get_words_from_file(self):
