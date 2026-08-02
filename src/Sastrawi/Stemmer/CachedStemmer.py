@@ -1,8 +1,10 @@
 #from Sastrawi.Stemmer.StemmerInterface import StemmerInterface
 from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 
+__all__ = ['CachedStemmer']
+
 class CachedStemmer:
-    """description of class"""
+    """Decorator that caches stemming results to avoid redundant computation."""
     MAX_CHARACTER_LENGTH = 1000000
 
     def __init__(self, cache, delegatedStemmer):

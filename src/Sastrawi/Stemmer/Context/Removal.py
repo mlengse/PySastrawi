@@ -1,7 +1,7 @@
 from Sastrawi.Stemmer.Context.RemovalInterface import RemovalInterface
 
 class Removal(RemovalInterface):
-    """description of class"""
+    """Record of an affix removal performed during the stemming process."""
 
     def __init__(self, visitor, subject, result, removedPart, affixType):
         self.visitor = visitor

@@ -4,6 +4,8 @@ from Sastrawi.Stemmer.Stemmer import Stemmer
 from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
 from Sastrawi.Stemmer.Cache.ArrayCache import ArrayCache
 
+__all__ = ['StemmerFactory']
+
 class StemmerFactory:
     """ Stemmer factory helps creating pre-configured stemmer """
 

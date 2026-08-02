@@ -1,4 +1,6 @@
 import unittest
+from threading import Thread
+
 from Sastrawi.Stemmer.Cache.ArrayCache import ArrayCache
 
 
@@ -29,6 +31,42 @@ class TestArrayCache(unittest.TestCase):
         self.assertTrue(self.cache.has('b'))
         self.assertEqual('1', self.cache.get('a'))
         self.assertEqual('2', self.cache.get('b'))
+
+    def test_concurrent_access(self):
+        errors = []
+
+        def worker(base):
+            try:
+                for i in range(100):
+                    key = base + str(i)
+                    self.cache.set(key, i)
+                    self.assertEqual(i, self.cache.get(key))
+                    self.assertTrue(self.cache.has(key))
+            except Exception as exc:  # pragma: no cover
+                errors.append(exc)
+
+        threads = [Thread(target=worker, args=('t%d-' % t,)) for t in range(8)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        self.assertEqual([], errors)
+
+    def test_concurrent_eviction_stays_within_max_size(self):
+        cache = ArrayCache(max_size=10)
+
+        def worker(base):
+            for i in range(100):
+                cache.set(base + str(i), i)
+
+        threads = [Thread(target=worker, args=('t%d-' % t,)) for t in range(8)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        self.assertLessEqual(len(cache.data), 10)
 
 
 if __name__ == '__main__':

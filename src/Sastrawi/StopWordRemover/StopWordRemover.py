@@ -1,5 +1,5 @@
 class StopWordRemover:
-    """description of class"""
+    """Remove stop words from a text using a dictionary of stop words."""
 
     MAX_CHARACTER_LENGTH = 1000000
 

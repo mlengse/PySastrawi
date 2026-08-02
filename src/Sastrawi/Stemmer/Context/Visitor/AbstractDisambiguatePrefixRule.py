@@ -1,7 +1,7 @@
 from Sastrawi.Stemmer.Context.Removal import Removal
 
 class AbstractDisambiguatePrefixRule:
-    """description of class"""
+    """Base visitor that applies an ordered list of prefix disambiguators."""
 
     def __init__(self):
         self.disambiguators = []

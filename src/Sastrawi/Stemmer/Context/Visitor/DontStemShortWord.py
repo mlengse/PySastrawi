@@ -1,5 +1,5 @@
 class DontStemShortWord:
-    """description of class"""
+    """Stop the stemming process for words of at most three characters."""
 
     def visit(self, context):
         if self.is_short_word(context.current_word):

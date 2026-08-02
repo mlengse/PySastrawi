@@ -1,5 +1,5 @@
 class CacheInterface:
-    """description of class"""
+    """Interface for a cache storing word-to-stem mappings."""
 
     def has(self, key):
         pass

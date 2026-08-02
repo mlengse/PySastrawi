@@ -1,8 +1,10 @@
 from Sastrawi.Dictionary.ArrayDictionary import ArrayDictionary
 from Sastrawi.StopWordRemover.StopWordRemover import StopWordRemover
 
+__all__ = ['StopWordRemoverFactory']
+
 class StopWordRemoverFactory:
-    """description of class"""
+    """Factory for creating a pre-configured StopWordRemover."""
 
     def create_stop_word_remover(self):
         stopWords = self.get_stop_words()

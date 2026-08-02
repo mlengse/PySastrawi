@@ -1,7 +1,7 @@
 import re
 
 class TextNormalizer:
-    """description of class"""
+    """Normalize text before stemming: lowercase, strip non-alphanumerics, collapse spaces."""
 
     # Pre-compile regex patterns
     _regex_normalize_chars = re.compile(r'[^a-z0-9 -]', re.IGNORECASE|re.MULTILINE)

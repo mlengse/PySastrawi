@@ -1,5 +1,5 @@
 class ArrayDictionary:
-    """description of class"""
+    """Dictionary of base words backed by a set for O(1) lookups."""
 
     def __init__(self, words=None):
         self.words = set()

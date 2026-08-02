@@ -47,7 +47,7 @@ from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule41 import Disambig
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule42 import DisambiguatorPrefixRule42
 
 class VisitorProvider:
-    """description of class"""
+    """Provides the ordered visitor lists used by the stemming context."""
 
     def __init__(self):
         self.visitors = []
@@ -55,6 +55,10 @@ class VisitorProvider:
         self.prefix_visitors = []
 
         self.init_visitors()
+
+        self.visitors = tuple(self.visitors)
+        self.suffix_visitors = tuple(self.suffix_visitors)
+        self.prefix_visitors = tuple(self.prefix_visitors)
 
     def init_visitors(self):
         self.visitors.append(DontStemShortWord())

@@ -1,5 +1,5 @@
 class ContextInterface:
-    """description of class"""
+    """Interface for the stemming context state."""
 
     def getOriginalWord(self):
         pass

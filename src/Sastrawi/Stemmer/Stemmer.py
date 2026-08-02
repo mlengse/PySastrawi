@@ -3,6 +3,8 @@ from Sastrawi.Stemmer.Context.Visitor.VisitorProvider import VisitorProvider
 from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 from Sastrawi.Stemmer.Context.Context import Context
 
+__all__ = ['Stemmer']
+
 class Stemmer:
     """Indonesian Stemmer.
     Nazief & Adriani, CS Stemmer, ECS Stemmer, Improved ECS.

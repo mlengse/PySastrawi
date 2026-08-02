@@ -1,5 +1,5 @@
 class RemovalInterface:
-    """description of class"""
+    """Interface for an affix removal record."""
 
     def get_visitor(self):
         pass
