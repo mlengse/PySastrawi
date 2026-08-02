@@ -102,9 +102,9 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 
 | ID | Task | Ref | Kriteria Diterima | Status |
 |----|------|-----|-------------------|--------|
-| IP-5.1 | Tulis `CHANGELOG.md` v2.0.0 | SPEC §10 | Mencatat breaking changes (ABC, rename), perbaikan, dan tambahan sejak v1.2.1; format Keep a Changelog | ⏳ |
-| IP-5.2 | Build wheel + sdist | SPEC §7 | `python -m build` menghasilkan `dist/Sastrawi-2.0.0-*.whl` & `.tar.gz`; `twine check dist/*` lulus | ⏳ |
-| IP-5.3 | Verifikasi instalasi dari wheel bersih | SPEC §3, §8 | `pip install dist/*.whl` di venv baru (tanpa `PYTHONPATH`); contoh SPEC §3.1 & §3.2 output sesuai; data file ter-packaging | ⏳ |
+| IP-5.1 | Tulis `CHANGELOG.md` v2.0.0 | SPEC §10 | Mencatat breaking changes (ABC, rename), perbaikan, dan tambahan sejak v1.2.1; format Keep a Changelog | ✅ `CHANGELOG.md` |
+| IP-5.2 | Build wheel + sdist | SPEC §7 | `python -m build` menghasilkan `dist/Sastrawi-2.0.0-*.whl` & `.tar.gz`; `twine check dist/*` lulus | ✅ `pysastrawi-2.0.0-py3-none-any.whl` + `.tar.gz`; `twine check` PASSED (perlu `MANIFEST.in` agar sdist menyertakan README/LICENSE/data) |
+| IP-5.3 | Verifikasi instalasi dari wheel bersih | SPEC §3, §8 | `pip install dist/*.whl` di venv baru (tanpa `PYTHONPATH`); contoh SPEC §3.1 & §3.2 output sesuai; data file ter-packaging | ✅ venv bersih (`uv venv` + wheel): §3.1 → `ekonomi indonesia sedang dalam tumbuh`, §3.2 → `''` |
 | IP-5.4 | Tag `v2.0.0` + GitHub Release | — | Tag annotated `v2.0.0`; release notes merujuk CHANGELOG | ⏳ |
 
 ### Fase 6 — Validasi akurasi vs KBBI 🚧 PLANNED
@@ -160,6 +160,10 @@ IP-1.4 (__all__) ────┘         │
 14. Kelas konkret di-wire + rename snake_case (IP-4.2): `ArrayDictionary.py`, `Context.py`, `Removal.py`, `Stemmer.py`, `CachedStemmer.py`, `StemmerFactory.py`, `StopWordRemoverFactory.py`, `Visitor/DontStemShortWord.py`, `Visitor/Remove*.py`, `Visitor/AbstractDisambiguatePrefixRule.py`, `setup.py` (`2.0.0`) ✅
 15. Test mock di-update (IP-4.2): `tests/UnitTests/Stemmer/Context/Visitor/dont_stem_short_word_test.py`, `visitors_test.py` ✅
 16. IP-4.3: `Morphology/InvalidAffixPairSpecification.py` — M4 precompile regex; **tidak di-wire** ke `Context.py` ✅
+
+**Fase 5 (v2.0.0)**
+17. `CHANGELOG.md` (baru, IP-5.1) — Keep a Changelog, mencakup breaking (ABC + rename), Fixed/Added sejak v1.2.1 ✅
+18. `MANIFEST.in` (baru, IP-5.2) — `include README.md/CHANGELOG.md/LICENSE` + `recursive-include src/Sastrawi *.txt`; sdist sebelumnya gagal build karena `README.md` tidak ikut ✅
 
 ---
 
