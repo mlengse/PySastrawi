@@ -137,6 +137,71 @@ class TestContext(unittest.TestCase):
         removal = Removal(None, 'test', 'result', 'removed', 'DS')
         self.assertTrue(ctx.is_suffix_removal(removal))
 
+    def test_interface_getters_and_setters(self):
+        """ContextInterface contract: getters/setters expose internal state."""
+        from Sastrawi.Stemmer.Context.Removal import Removal
+        dictionary = ArrayDictionary(['makan'])
+        ctx = self._make_context('memakan', dictionary)
+
+        self.assertEqual('memakan', ctx.get_original_word())
+        self.assertEqual('memakan', ctx.get_current_word())
+        self.assertIs(dictionary, ctx.get_dictionary())
+        self.assertEqual([], ctx.get_removals())
+
+        ctx.set_current_word('makan')
+        self.assertEqual('makan', ctx.get_current_word())
+
+        removal = Removal(None, 'memakan', 'makan', 'mem', 'DP')
+        ctx.add_removal(removal)
+        self.assertEqual([removal], ctx.get_removals())
+
+    def test_removal_getters(self):
+        from Sastrawi.Stemmer.Context.Removal import Removal
+        removal = Removal('visitor', 'subject', 'result', 'part', 'DS')
+        self.assertEqual('visitor', removal.get_visitor())
+        self.assertEqual('subject', removal.get_subject())
+        self.assertEqual('result', removal.get_result())
+        self.assertEqual('part', removal.get_removed_part())
+        self.assertEqual('DS', removal.get_affix_type())
+
+    def test_main_visitor_reducing_to_dictionary_word_stops(self):
+        """If the main visitors reduce the word to a dictionary word, stop (step 1)."""
+
+        class ReducerVisitor:
+            def visit(self, context):
+                context.set_current_word('makan')
+
+        class Provider:
+            def get_visitors(self):
+                return [ReducerVisitor()]
+
+            def get_suffix_visitors(self):
+                return []
+
+            def get_prefix_visitors(self):
+                return []
+
+        dictionary = ArrayDictionary(['makan'])
+        ctx = Context('memakan', dictionary, Provider())
+        ctx.execute()
+        self.assertEqual('makan', ctx.result)
+
+    def test_loop_pengembalian_akhiran_skips_non_suffix_removals(self):
+        """ECS loop: non-suffix removals are skipped; a 'kan' removal restores 'k'."""
+        from Sastrawi.Stemmer.Context.Removal import Removal
+        dictionary = ArrayDictionary(['pukul'])
+        ctx = self._make_context('dipukulkan', dictionary)
+
+        dp = Removal(None, 'dipukulkan', 'dipukulkan', '', 'DP')
+        ds = Removal(None, 'dipukulkan', 'dipukul', 'kan', 'DS')
+        other = Removal(None, 'dipukulkan', 'dipukulkan', 'mem', 'X')
+        ctx.removals = [dp, other, ds]
+        ctx.current_word = 'dipukulkan'
+
+        ctx.loop_pengembalian_akhiran()
+
+        self.assertEqual('dipukulkan', ctx.current_word)
+
 
 if __name__ == '__main__':
     unittest.main()

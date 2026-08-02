@@ -73,6 +73,7 @@ class TestDisambiguatorPrefixRules(unittest.TestCase):
     def test_rule3(self):
         self.assertDisambiguates(DisambiguatorPrefixRule3(), 'berdaerah', 'daerah')
         self.assertNoMatch(DisambiguatorPrefixRule3(), 'bersuara')
+        self.assertNoMatch(DisambiguatorPrefixRule3(), 'berraerit')
 
     # Rule 4: belajar -> ajar
     def test_rule4(self):
@@ -98,6 +99,7 @@ class TestDisambiguatorPrefixRules(unittest.TestCase):
     def test_rule7(self):
         self.assertDisambiguates(DisambiguatorPrefixRule7(), 'tergerak', 'gerak')
         self.assertNoMatch(DisambiguatorPrefixRule7(), 'tertua')
+        self.assertNoMatch(DisambiguatorPrefixRule7(), 'terrerah')
 
     # Rule 8: terCP -> ter-CP where C != 'r' and P != 'er'
     def test_rule8(self):
@@ -108,6 +110,7 @@ class TestDisambiguatorPrefixRules(unittest.TestCase):
     def test_rule9(self):
         self.assertDisambiguates(DisambiguatorPrefixRule9(), 'teterbang', 'terbang')
         self.assertNoMatch(DisambiguatorPrefixRule9(), 'terlerai')
+        self.assertNoMatch(DisambiguatorPrefixRule9(), 'tererbat')
 
     # Rule 10: me{l|r|w|y}V -> me-{l|r|w|y}V
     def test_rule10(self):
@@ -208,6 +211,7 @@ class TestDisambiguatorPrefixRules(unittest.TestCase):
     # Rule 24: perCAerV -> per-CAerV where C != 'r'
     def test_rule24(self):
         self.assertDisambiguates(DisambiguatorPrefixRule24(), 'perdaerah', 'daerah')
+        self.assertNoMatch(DisambiguatorPrefixRule24(), 'perraerik')
 
     # Rule 25: pem{b|f|v} -> pem-{b|f|v}
     def test_rule25(self):

@@ -24,5 +24,9 @@ class TestStemmer(unittest.TestCase):
         self.stemmer.get_dictionary().add('nilai')
         self.assertEqual('nilai', self.stemmer.stem('nilai'))
 
+    def test_StemPluralWordWithoutDashReturnsUnchanged(self):
+        """Guard: a non-plural word passed to stem_plural_word is returned as-is."""
+        self.assertEqual('beri', self.stemmer.stem_plural_word('beri'))
+
 if __name__ == '__main__':
     unittest.main()

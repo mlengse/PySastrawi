@@ -26,7 +26,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 ## 3. Definisi Selesai (Definition of Done)
 
 - [x] Test suite penuh lulus: `python -m unittest discover tests -p '*_test*.py' -v`
-- [x] Jumlah test tidak berkurang (baseline 178 → **190**)
+- [x] Jumlah test tidak berkurang (baseline 178 → **195**)
 - [x] Tidak ada dependensi baru di `setup.py`/`pyproject.toml`
 - [x] `__init__.py` tetap kosong (0/11 non-empty; konvensi import path lengkap)
 - [x] Status task diperbarui di `pysastrawi.md` (kolom Status / tabel terdefer)
@@ -42,7 +42,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 
 ### Hasil (post-implementasi)
 
-- Test: **187 lulus** (+9: 2 konkurensi cache, 7 VisitorProvider) → **190** setelah Fase 3 (error-path factory + stem)
+- Test: **187 lulus** (+9: 2 konkurensi cache, 7 VisitorProvider) → **190** setelah Fase 3 (error-path factory + stem) → **195** setelah coverage 100% (follow-up: getter, cabang ECS/defensif, guard rule)
 - Versi: **2.0.0** (Fase 4: IP-4.1 ABC + IP-4.2 rename → rilis major)
 - Placeholder docstring: **0**
 - Modul dengan `__all__`: **7** (modul kelas publik; `__init__.py` tetap kosong)
@@ -218,4 +218,8 @@ Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, s
 
 **Hasil (Fase 6 / validasi KBBI)**: dataset 216 kata turunan dari 16 kata dasar (KBBI, via `kbbi_daftar_kata_turunan`; ekspor bulk timeout) → akurasi **96.8%** (209/216). 7 kegagalan → 5 kategori: A) over-removal sufiks → tabrakan kata kamus (`pejalan`→`pejal`, `selari`→`selar`); B) `-nya` salah urai (`menanya`→`mena`, `penanya`→`pena`); C) p-luluh `mem-V` (`memakani`→`pakan`); D) kata majemuk (`menumbuhkembangkan`); E) prefiks `te-` tak didukung (`tetumbuhan`). Rekomendasi: P1 rule `te-`, P2 urutan prefiks-dulu untuk kasus A, P3 tinjau p-luluh tanpa data tambahan, P4 dokumentasi untuk B/D.
 
-**Rencana berikutnya (belum dikerjakan)**: (1) P1-P3 dari Fase 6 (rule baru, butuh verifikasi pola dulu), (2) dataset KBBI full per huruf bila tool bulk ekspor stabil, (3) publish ke PyPI (`twine upload`), (4) kerek coverage 98%→100%.
+**Hasil (Follow-up — P1 ditolak + coverage 100%)**: 
+- **P1 (rule `te-`) DITOLAK dengan data**: dari 676 kata kamus berawalan `te-C`, rule naif (hapus `te`, sisanya harus di kamus) akan salah stem **161 kata dasar** (`tebal`→`bal`, `tebang`→`bang`, `tegas`→`gas`, `tenaga`→`naga`, `teriak`→`riak`, `tetangga`→`tangga`, `tetapi`→`tapi`, `tetamu`→`tamu`, `tetes`→`tes`, …). Morfem sebenarnya pada `tetumbuhan` adalah `teR-` (asimilasi), bukan prefiks `te-` produktif → masuk backlog, bukan rule baru.
+- **Coverage 98% → 100%** (+5 test, total **195**): getter `Context`/`Removal`, cabang step-1 main-visitor (`Context.py:71`), cabang non-sufiks ECS (`Context.py:147`), guard `C == 'r'` Rule 3/7/9/24, guard `stem_plural_word` (`Stemmer.py:72`). 890 stmts / 252 branch, **0 miss**. Perilaku tidak berubah (KBBI 96.8% konsisten).
+
+**Rencana berikutnya (belum dikerjakan)**: (1) P2 dari Fase 6 (urutan prefiks-dulu utk kasus A, perlu data & risiko regresi), (2) P3 p-luluh bila ada data tambahan, (3) dataset KBBI full per huruf bila tool bulk ekspor stabil, (4) publish ke PyPI (`twine upload`).
