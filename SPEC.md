@@ -203,6 +203,11 @@ tests/
 ├── UnitTests/             per-modul (dictionary, cache, context, visitor, disambiguator, …)
 ├── FunctionalTests/       kasus stemming fungsional (subTest)
 └── IntegrationTests/      StemmerFactory + end-to-end (subTest)
+
+tools/                     (di luar paket; Fase 6)
+├── kbbi_validation_data.json   ground truth KBBI: kata turunan → kata dasar
+├── kbbi_benchmark.py           benchmark akurasi stemmer vs KBBI
+└── kbbi_trace.py               debug trace pipeline Context untuk kata gagal
 ```
 
 Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dari build — diabaikan.
@@ -257,3 +262,7 @@ Item yang **sudah dikerjakan pada v2.0.0 (Fase 4)**:
 |------|------------|
 | Refactor penamaan camelCase → snake_case (L2) | IP-4.2 |
 | Migrasi interface ke ABC (M5) | IP-4.1 |
+
+**Fase 5 (release v2.0.0)**: `CHANGELOG.md` (Keep a Changelog) + `MANIFEST.in`; build wheel/sdist (`python -m build`) lulus `twine check`; verifikasi instalasi di venv bersih; tag annotated `v2.0.0` + GitHub Release.
+
+**Fase 6 (validasi akurasi vs KBBI)**: dataset 216 kata turunan dari 16 kata dasar → akurasi **96.8%** (209/216). 7 kegagalan dikategorikan (A over-removal sufiks, B `-nya` salah urai, C p-luluh `mem-V`, D kata majemuk, E prefiks `te-`). Detail & rekomendasi P1–P4 di [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) Fase 6. Artefak: `tools/`. Ekspor bulk per huruf (`kbbi_ekspor_stem_mapping`) tidak dapat dipakai (timeout), jadi dataset dikurasi via `kbbi_daftar_kata_turunan`.

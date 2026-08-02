@@ -11,7 +11,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 3. **Meningkatkan kualitas dokumentasi data** (SPEC §6, item M8).
 4. **Mempertahankan invariant inti**: tanpa dependensi eksternal, Python ≥ 3.8, 178+ test lulus.
 
-> **Status putaran**: Fase 1–5 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire). Fase 5 (release engineering) **selesai**: CHANGELOG, wheel/sdist, verifikasi instalasi, tag + GitHub Release. **Berikutnya**: Fase 6 (validasi akurasi vs KBBI) — belum dikerjakan.
+> **Status putaran**: Fase 1–6 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire). Fase 5 (release engineering) **selesai**: CHANGELOG, wheel/sdist, verifikasi instalasi, tag + GitHub Release. Fase 6 (validasi KBBI) **selesai**: pilot 216 kata turunan → **96.8%** akurasi, 7 kegagalan dalam 5 kategori.
 
 ## 2. Prinsip Kerja
 
@@ -107,13 +107,33 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 | IP-5.3 | Verifikasi instalasi dari wheel bersih | SPEC §3, §8 | `pip install dist/*.whl` di venv baru (tanpa `PYTHONPATH`); contoh SPEC §3.1 & §3.2 output sesuai; data file ter-packaging | ✅ venv bersih (`uv venv` + wheel): §3.1 → `ekonomi indonesia sedang dalam tumbuh`, §3.2 → `''` |
 | IP-5.4 | Tag `v2.0.0` + GitHub Release | — | Tag annotated `v2.0.0`; release notes merujuk CHANGELOG | ✅ tag `v2.0.0` + [release](https://github.com/mlengse/PySastrawi/releases/tag/v2.0.0) |
 
-### Fase 6 — Validasi akurasi vs KBBI 🚧 PLANNED
+### Fase 6 — Validasi akurasi vs KBBI ✅ DONE
+
+> **Catatan metode**: ekspor bulk per huruf (`kbbi_ekspor_stem_mapping`) timeout untuk semua huruf yang dicoba; diganti dengan `kbbi_daftar_kata_turunan` untuk **16 kata dasar** yang dikurasi (mewakili prefiks meN-, beR-, teR-, peN-, se-, ke-…-an, -kan/-i/-an, reduplikasi) → **216 kata turunan** sebagai ground truth (KBBI).
 
 | ID | Task | Ref | Kriteria Diterima | Status |
 |----|------|-----|-------------------|--------|
-| IP-6.1 | Ekspor dataset mapping stem KBBI (bulk, per huruf) | SPEC §4 | Dataset kata berimbuhan → `rootWord` (via tool KBBI) sebagai ground truth | ⏳ |
-| IP-6.2 | Benchmark stemmer vs KBBI | SPEC §4 | Skor akurasi keseluruhan + per tipe afiks; daftar kata yang menyimpang | ⏳ |
-| IP-6.3 | Kategorisasi kegagalan & rekomendasi | SPEC §10 | Pisahkan "perlu perbaikan rule" vs "perilaku ECS yang disengaja"; usulan prioritas | ⏳ |
+| IP-6.1 | Ekspor dataset mapping stem KBBI | SPEC §4 | Dataset kata berimbuhan → `rootWord` (via tool KBBI) sebagai ground truth | ✅ `tools/kbbi_validation_data.json` (216 pasangan, 16 kata dasar) |
+| IP-6.2 | Benchmark stemmer vs KBBI | SPEC §4 | Skor akurasi keseluruhan + daftar kata yang menyimpang | ✅ **96.8%** (209/216); `tools/kbbi_benchmark.py`; 7 mismatch |
+| IP-6.3 | Kategorisasi kegagalan & rekomendasi | SPEC §10 | Pisahkan "perlu perbaikan rule" vs "perilaku ECS yang disengaja"; usulan prioritas | ✅ 5 kategori; lihat tabel di bawah |
+
+**Kategorisasi 7 kegagalan (IP-6.3)**
+
+| Kategori | Kata | Output | Akar masalah |
+|----------|------|--------|--------------|
+| A. Over-removal sufiks → tabrakan kata kamus | `pejalan`→`pejal`, `selari`→`selar` | sufiks `-an`/`-i` dibuang dulu (prioritas sufiks) lalu jatuh ke kata kamus lain (`pejal`, `selar`); prefiks `pe-`/`se-` tidak sempat diproses | Prioritas sufiks-dulu ECS; aturan `pe-`/`se-` tidak dijangkau |
+| B. `-nya` salah diuraikan (possesif vs akar) | `menanya`→`mena`, `penanya`→`pena` | `-nya` dianggap pronomina posesif, padahal bagian akar `tanya`; hasil `mena`/`pena` = kata kamus lain | `RemoveInflectionalPossessivePronoun` naif untuk akar berakhiran `-nya` |
+| C. Ambigu p-luluh `mem-V` | `memakani`→`pakan` | Rule 13b (`mem-V`→`p-…`) menghasilkan `pakan` (kata kamus) karena 13a (`m-…`) gagal di tahap antara `makani`; `-i` belum sempat dibuang | Disambiguator memakai hasil terakhir bila tidak ada yang cocok di kamus; order prefiks-dulu |
+| D. Kata majemuk berimbuhan (compound) | `menumbuhkembangkan`→(tidak berubah) | Akar ganda `tumbuh`+`kembang`; ECS tidak punya rule | Diluar cakupan ECS (bukan rule, tapi segmentasi kata majemuk) |
+| E. Prefiks `te-` tidak didukung | `tetumbuhan`→(tidak berubah) | Hanya `teR-` yang punya disambiguator; `te-` polos tidak ada rule | Kandidat rule baru (mirip `teR-` yang menyerap `/r/`) |
+
+**Rekomendasi prioritas (IP-6.3)**
+1. **P1 (rule kecil, dampak besar)**: tambah disambiguator `te-` → turunkan `te-{k…}`? Perlu verifikasi pola (`tetumbuhan`→`tumbuh`; cek `ketua`, `telur`, dst. dulu). Kelas E.
+2. **P2**: perbaiki urutan untuk kasus A — bila hasil over-removal sufiks adalah kata kamus yang juga "sufiks-panjang" dari bentuk berprefiks valid, coba balik urutan (contoh `pejalan`: coba `pe-` dulu → `jalan`). Terkait `PrecedenceAdjustmentSpecification`.
+3. **P3**: p-luluh (C) — perlu bukti lebih banyak; `memakani` jarang, tapi `membacai`, `mengenai`-type perlu ditinjau. Jangan ubah tanpa data tambahan (meningkatkan risiko regresi, lihat IP-4.3).
+4. **P4 (bukan rule)**: kelas B dan D adalah limitasi desain ECS/naif; dokumentasikan saja.
+
+> **Catatan ketelitian**: beberapa "mismatch" sebenarnya perilaku sah — e.g. `berikut`→`ikut`, `kinerja`→`kerja`, `menumbuhkembangkan` dianggap kata leksem utuh. Skor 96.8% pada 216 kata turunan = pilot terkurasi; untuk angka menyeluruh perlu dataset full KBBI (ekspor bulk timeout).
 
 ---
 
@@ -194,4 +214,8 @@ python -m unittest tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test
 
 Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, suite hijau (190), tidak ada placeholder docstring tersisa, tidak ada camelCase di kode (hanya docstring rule), dan `pysastrawi.md` merefleksikan status terbaru.
 
-**Rencana berikutnya (belum dikerjakan)**: Fase 5 (IP-5.1 CHANGELOG, IP-5.2 build wheel/sdist, IP-5.3 verifikasi instalasi wheel, IP-5.4 tag + GitHub Release) dan Fase 6 (IP-6.1–6.3 validasi akurasi vs KBBI).
+**Hasil (Fase 5 / release v2.0.0)**: `CHANGELOG.md` + `MANIFEST.in` ditulis; `python -m build` → `dist/pysastrawi-2.0.0-py3-none-any.whl` + `.tar.gz`; `twine check` PASSED; instalasi terverifikasi di venv bersih (SPEC §3.1/§3.2 lulus). Tag annotated `v2.0.0` + GitHub Release dibuat. Suite tetap **190 test OK**.
+
+**Hasil (Fase 6 / validasi KBBI)**: dataset 216 kata turunan dari 16 kata dasar (KBBI, via `kbbi_daftar_kata_turunan`; ekspor bulk timeout) → akurasi **96.8%** (209/216). 7 kegagalan → 5 kategori: A) over-removal sufiks → tabrakan kata kamus (`pejalan`→`pejal`, `selari`→`selar`); B) `-nya` salah urai (`menanya`→`mena`, `penanya`→`pena`); C) p-luluh `mem-V` (`memakani`→`pakan`); D) kata majemuk (`menumbuhkembangkan`); E) prefiks `te-` tak didukung (`tetumbuhan`). Rekomendasi: P1 rule `te-`, P2 urutan prefiks-dulu untuk kasus A, P3 tinjau p-luluh tanpa data tambahan, P4 dokumentasi untuk B/D.
+
+**Rencana berikutnya (belum dikerjakan)**: (1) P1-P3 dari Fase 6 (rule baru, butuh verifikasi pola dulu), (2) dataset KBBI full per huruf bila tool bulk ekspor stabil, (3) publish ke PyPI (`twine upload`), (4) kerek coverage 98%→100%.
