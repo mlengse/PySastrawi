@@ -11,7 +11,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 3. **Meningkatkan kualitas dokumentasi data** (SPEC §6, item M8).
 4. **Mempertahankan invariant inti**: tanpa dependensi eksternal, Python ≥ 3.8, 178+ test lulus.
 
-> **Status putaran**: Fase 1–4 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire).
+> **Status putaran**: Fase 1–4 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire). **Berikutnya**: Fase 5 (release engineering v2.0.0) dan Fase 6 (validasi akurasi vs KBBI) — belum dikerjakan.
 
 ## 2. Prinsip Kerja
 
@@ -98,6 +98,23 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 - Upstream PHP `sastrawi/sastrawi` juga tidak pernah me-wire spec ini (hanya dipakai di test-nya sendiri; test `perkataan` bahkan berkomentar `// wtf?`).
 - Keputusan: spec dipertahankan sebagai utilitas ber-test + regex di-precompile (M4); tidak di-wire untuk menghindari penurunan akurasi.
 
+### Fase 5 — Release engineering v2.0.0 🚧 PLANNED
+
+| ID | Task | Ref | Kriteria Diterima | Status |
+|----|------|-----|-------------------|--------|
+| IP-5.1 | Tulis `CHANGELOG.md` v2.0.0 | SPEC §10 | Mencatat breaking changes (ABC, rename), perbaikan, dan tambahan sejak v1.2.1; format Keep a Changelog | ⏳ |
+| IP-5.2 | Build wheel + sdist | SPEC §7 | `python -m build` menghasilkan `dist/Sastrawi-2.0.0-*.whl` & `.tar.gz`; `twine check dist/*` lulus | ⏳ |
+| IP-5.3 | Verifikasi instalasi dari wheel bersih | SPEC §3, §8 | `pip install dist/*.whl` di venv baru (tanpa `PYTHONPATH`); contoh SPEC §3.1 & §3.2 output sesuai; data file ter-packaging | ⏳ |
+| IP-5.4 | Tag `v2.0.0` + GitHub Release | — | Tag annotated `v2.0.0`; release notes merujuk CHANGELOG | ⏳ |
+
+### Fase 6 — Validasi akurasi vs KBBI 🚧 PLANNED
+
+| ID | Task | Ref | Kriteria Diterima | Status |
+|----|------|-----|-------------------|--------|
+| IP-6.1 | Ekspor dataset mapping stem KBBI (bulk, per huruf) | SPEC §4 | Dataset kata berimbuhan → `rootWord` (via tool KBBI) sebagai ground truth | ⏳ |
+| IP-6.2 | Benchmark stemmer vs KBBI | SPEC §4 | Skor akurasi keseluruhan + per tipe afiks; daftar kata yang menyimpang | ⏳ |
+| IP-6.3 | Kategorisasi kegagalan & rekomendasi | SPEC §10 | Pisahkan "perlu perbaikan rule" vs "perilaku ECS yang disengaja"; usulan prioritas | ⏳ |
+
 ---
 
 ## 6. Urutan & Dependensi
@@ -169,6 +186,8 @@ python -m unittest tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test
 
 **Hasil (putaran Fase 1–3)**: 190 test OK. Coverage ~96% (branch) dengan jalur error (`TypeError`/`ValueError`, `RuntimeError` file data hilang) ter-cover; sisa yang tidak ter-cover adalah abstract method interface, `__init__.py` kosong, dan dead code defensif. CI GitHub Actions (`.github/workflows/ci.yml`) menjalankan `pip install -e .` + `unittest discover` pada Python 3.8–3.12. Smoke test instalasi: contoh SPEC §3.1 → `ekonomi indonesia sedang dalam tumbuh yang bangga`, §3.2 → `''`; semua data file ter-packaging.
 
-**Hasil (Fase 4 / v2.0.0)**: seluruh task IP-4.1–4.3 selesai. Interface → `abc.ABC` (probe: instansiasi kelas `Bad*` gagal `TypeError`, semua kelas konkret tetap instantiate); rename camelCase → snake_case tuntas (scan repo bersih; sisa hanya notasi rule di docstring). IP-4.3 dievaluasi dan **ditolak** (wiring menurunkan akurasi; bukti di catatan IP-4.3). Suite: **190 test OK**.
+**Hasil (Fase 4 / v2.0.0)**: seluruh task IP-4.1–4.3 selesai. Interface → `abc.ABC` (probe: instansiasi kelas `Bad*` gagal `TypeError`, semua kelas konkret tetap instantiate); rename camelCase → snake_case tuntas (scan repo bersih; sisa hanya notasi rule di docstring). IP-4.3 dievaluasi dan **ditolak** (wiring menurunkan akurasi; bukti di catatan IP-4.3). Suite: **190 test OK**, coverage naik ke **~98%** (14 stmt miss: `Context.py:29,32,35,38,50,71,147`, `Removal.py:14,20`, `Stemmer.py:72`, fallback Rule 3/7/9/24).
 
 Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, suite hijau (190), tidak ada placeholder docstring tersisa, tidak ada camelCase di kode (hanya docstring rule), dan `pysastrawi.md` merefleksikan status terbaru.
+
+**Rencana berikutnya (belum dikerjakan)**: Fase 5 (IP-5.1 CHANGELOG, IP-5.2 build wheel/sdist, IP-5.3 verifikasi instalasi wheel, IP-5.4 tag + GitHub Release) dan Fase 6 (IP-6.1–6.3 validasi akurasi vs KBBI).
