@@ -109,7 +109,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 
 ### Fase 6 — Validasi akurasi vs KBBI ✅ DONE
 
-> **Catatan metode**: ekspor bulk per huruf (`kbbi_ekspor_stem_mapping`) timeout untuk semua huruf yang dicoba; diganti dengan `kbbi_daftar_kata_turunan` untuk **16 kata dasar** yang dikurasi (mewakili prefiks meN-, beR-, teR-, peN-, se-, ke-…-an, -kan/-i/-an, reduplikasi) → **216 kata turunan** sebagai ground truth (KBBI).
+> **Catatan metode**: ekspor bulk per huruf (`kbbi_ekspor_stem_mapping`) timeout untuk semua huruf yang dicoba; diganti dengan `kbbi_daftar_kata_turunan` untuk **16 kata dasar** yang dikurasi (mewakili prefiks meN-, beR-, teR-, peN-, se-, ke-…-an, -kan/-i/-an, reduplikasi) → **216 kata turunan** sebagai ground truth (KBBI). Sejak follow-up, dataset **full** tersedia lokal (`kbbi-harvester-cdn/lexicon/derived_to_root.json`, 33.268 pasangan) → lihat `tools/kbbi_full_benchmark.py` dan hasil di §9.
 
 | ID | Task | Ref | Kriteria Diterima | Status |
 |----|------|-----|-------------------|--------|
@@ -226,4 +226,15 @@ Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, s
 - **P2 (urutan prefiks-dulu) DITOLAK dengan data**: dicoba menambah pola CS-precedence `^pe(.*)an$` dan `^se(.*)i$` (kasus A: `pejalan`→`jalan`✅, `selari`→`lari`✅) → di dataset KBBI **net +1** (210/216) tapi **regresi berat pada kata umum `pembelajaran`→`bajar`** (seharusnya `ajar`). Pola `^pe(.*)an$` memecah `pembelajaran` di titik yang salah setelah suffix-removal (`pe-belajaran`→tabrakan `bajar`), dan regresi itu **meniadakan** perbaikan (pola `+pe-an` saja = 209/216). Verdict: kata umum yang hancur tidak sebanding dengan 2 kata langka yang membaik → masuk backlog, bukan perubahan rule. Edit eksperimen di-revert; `PrecedenceAdjustmentSpecification` kembali ke 6 pola asli.
 - **Anti-regresi**: test fungsional baru `['pembelajaran', 'ajar']` (di bagian `Combination of prefix + suffix`) mengunci bahwa `pembelajaran` tetap → `ajar`. Suite **195 test OK** (subtest tambahan, jumlah metode tak berubah).
 
-**Rencana berikutnya (belum dikerjakan)**: (1) P3 p-luluh bila ada data tambahan, (2) dataset KBBI full per huruf bila tool bulk ekspor stabil, (3) publish ke PyPI (`twine upload`). P1 & P2 tertutup (ditolak dengan data + anti-regresi dipertahankan).
+**Hasil (Follow-up — dataset KBBI full + P3 ditolak)**: 
+- **Dataset penuh tersedia secara lokal** di `C:\Users\aknpa\dev\bahasa\data\kbbi-harvester-cdn\lexicon\derived_to_root.json` (33.268 pasangan kata turunan → root KBBI; ekspor bulk MCP jadi tak perlu). `tools/kbbi_full_benchmark.py` (baru) memakai dataset ini.
+- **Akurasi full**: **88.90%** (29.412/33.084 kata turunan single-token; 184 multi-token dilewati). Kategorisasi 3.672 mismatch:
+  - **D2 over-stem tabrakan kata kamus: 1.762 (48.0%)** — over-removal sufiks menyingkap kata kamus langka (`ajakan`→`aja` karena `aja` ∈ kamus; `batikan`→`bati`). Lever akurasi terbesar = kurasi kamus, bukan rule.
+  - **D3 root tak ada di kamus: 963 (26.2%)** — cakupan kamus (root KBBI ∉ `kata-dasar.txt`).
+  - **R1 reduplikasi: 448 (12.2%)** — bentuk `X-Xan`/`X-berX` non-plural tidak ditangani sebagai tunggal.
+  - **D1 kata turunan terdaftar sebagai dasar: 290 (7.9%)** — e.g. `abangan`, `akuan`, `bebatuan` ada di `kata-dasar.txt` sehingga tak di-stem.
+  - **R2 gap rule: 206 (5.6%)** — prefiks kolektif `be-` (`bebatuan`→`batu`), artikel `al-` (`almuhit`→`muhit`), dll.
+- **P3 (p-luluh `mem-V`) DITOLAK dengan data**: dicoba menukar urutan rule 13b/13a (`[13b, 13a]`). Di dataset full **+56** (89.07%) — 122 membaik, 66 rusak — tapi di set terkurasi **turun** 209→208/216 dan merusak **kata umum** `memakan`→`pakan` & `memasak`→`pasak` (karena `pakan`/`pasak` ∈ kamus dan jadi short-circuit). Kenapa full naik padahal curated turun: dataset lokal bias homograf (resolve ke entri terakhir — `memakani`→`pakan` di file lokal, padahal KBBI `kataDasar` resminya `makan¹`; `memadukan`→`padu` benar, `memadui`→`madu`). Verdict: **tukar urutan tidak aman** → masuk backlog bersama P1/P2.
+- **Catatan kualitas data lokal**: `derived_to_root.json` memilih root terakhir untuk homograf (e.g. `memakani`→`pakan` vs `makan¹` di MCP). Untuk eksperimen rule, patokan yang andal tetap set terkurasi 216.
+
+**Rencana berikutnya (belum dikerjakan)**: (1) kurasi kamus utk kategori D2/D1 (perlu audit kata-kata langka per huruf; risiko mengorbankan kata valid — perlu daftar kolisi dulu), (2) reduplikasi R1 bila dikehendaki. P1, P2, P3 tertutup (ditolak dengan data). Publish PyPI **di-skip** (keputusan user).

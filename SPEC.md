@@ -266,3 +266,9 @@ Item yang **sudah dikerjakan pada v2.0.0 (Fase 4)**:
 **Fase 5 (release v2.0.0)**: `CHANGELOG.md` (Keep a Changelog) + `MANIFEST.in`; build wheel/sdist (`python -m build`) lulus `twine check`; verifikasi instalasi di venv bersih; tag annotated `v2.0.0` + GitHub Release.
 
 **Fase 6 (validasi akurasi vs KBBI)**: dataset 216 kata turunan dari 16 kata dasar → akurasi **96.8%** (209/216). 7 kegagalan dikategorikan (A over-removal sufiks, B `-nya` salah urai, C p-luluh `mem-V`, D kata majemuk, E prefiks `te-`). Detail & rekomendasi P1–P4 di [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) Fase 6. Artefak: `tools/`. Ekspor bulk per huruf (`kbbi_ekspor_stem_mapping`) tidak dapat dipakai (timeout), jadi dataset dikurasi via `kbbi_daftar_kata_turunan`.
+
+**Follow-up (semua prioritas tertutup — ditolak dengan data)**: 
+- P1 (`te-`) ditolak: 676 kata `te-C` di kamus, rule naif salah-stem 161 kata dasar (`tebal`→`bal`, `tetapi`→`tapi`, …); `tetumbuhan` = `teR-` asimilasi, bukan `te-` produktif.
+- P2 (urutan prefiks-dulu) ditolak: pola `^pe(.*)an$`/`^se(.*)i$` → net +1 di 216 tapi regresi `pembelajaran`→`bajar`; anti-regresi `['pembelajaran','ajar']` ditambahkan ke test fungsional.
+- P3 (p-luluh, tukar rule 13b/13a) ditolak: di **dataset KBBI full** (33.268 pasangan, tersedia lokal di `kbbi-harvester-cdn/lexicon/derived_to_root.json`; `tools/kbbi_full_benchmark.py`) **+56** (88.90%→89.07%) tapi di set terkurasi **turun** 209→208/216 dan merusak kata umum `memakan`→`pakan`, `memasak`→`pasak`. Dataset full: **88.90%** (29.412/33.084) dengan breakdown mismatch — D2 tabrakan kamus 48.0%, D3 cakupan kamus 26.2%, R1 reduplikasi 12.2%, D1 kata turunan-di-kamus 7.9%, R2 gap rule 5.6%.
+- Coverage **100%** (890 stmts / 252 branch, **0 miss**); suite **195 test OK**. Publish PyPI **di-skip** (keputusan user). Item backlog: kurasi kamus (D1/D2), reduplikasi (R1).
