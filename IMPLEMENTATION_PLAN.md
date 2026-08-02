@@ -29,7 +29,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 - [x] Jumlah test tidak berkurang (baseline 178 → **195**)
 - [x] Tidak ada dependensi baru di `setup.py`/`pyproject.toml`
 - [x] `__init__.py` tetap kosong (0/11 non-empty; konvensi import path lengkap)
-- [x] Status task diperbarui di `pysastrawi.md` (kolom Status / tabel terdefer)
+- [x] Status task diperbarui di `SPEC.md` §10 (kolom Status / tabel terdefer)
 
 ---
 
@@ -172,8 +172,7 @@ IP-1.4 (__all__) ────┘         │
 10. `tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test.py` (baru, IP-2.3) ✅
 
 **Dokumen pelacak**
-11. `pysastrawi.md` — update status tiap task ✅
-12. `SPEC.md` — sinkronisasi perilaku baru (Cache thread-safe, stop words data file, `__all__`, hasil kamus) ✅
+11. `SPEC.md` — sinkronisasi perilaku baru (Cache thread-safe, stop words data file, `__all__`, hasil kamus, status Fase 1–6 + follow-up) ✅
 
 **Fase 4 (v2.0.0)**
 13. Interface → `abc.ABC` (IP-4.1): `Dictionary/DictionaryInterface.py`, `Stemmer/StemmerInterface.py`, `Stemmer/Cache/CacheInterface.py`, `Stemmer/Context/RemovalInterface.py`, `Stemmer/Context/ContextInterface.py` ✅
@@ -212,7 +211,7 @@ python -m unittest tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test
 
 **Hasil (Fase 4 / v2.0.0)**: seluruh task IP-4.1–4.3 selesai. Interface → `abc.ABC` (probe: instansiasi kelas `Bad*` gagal `TypeError`, semua kelas konkret tetap instantiate); rename camelCase → snake_case tuntas (scan repo bersih; sisa hanya notasi rule di docstring). IP-4.3 dievaluasi dan **ditolak** (wiring menurunkan akurasi; bukti di catatan IP-4.3). Suite: **190 test OK**, coverage naik ke **~98%** (14 stmt miss: `Context.py:29,32,35,38,50,71,147`, `Removal.py:14,20`, `Stemmer.py:72`, fallback Rule 3/7/9/24).
 
-Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, suite hijau (190), tidak ada placeholder docstring tersisa, tidak ada camelCase di kode (hanya docstring rule), dan `pysastrawi.md` merefleksikan status terbaru.
+Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, suite hijau (190), tidak ada placeholder docstring tersisa, tidak ada camelCase di kode (hanya docstring rule), dan `SPEC.md` §10 merefleksikan status terbaru.
 
 **Hasil (Fase 5 / release v2.0.0)**: `CHANGELOG.md` + `MANIFEST.in` ditulis; `python -m build` → `dist/pysastrawi-2.0.0-py3-none-any.whl` + `.tar.gz`; `twine check` PASSED; instalasi terverifikasi di venv bersih (SPEC §3.1/§3.2 lulus). Tag annotated `v2.0.0` + GitHub Release dibuat. Suite tetap **190 test OK**.
 
