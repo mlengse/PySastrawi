@@ -1,0 +1,121 @@
+{
+  "totalTestCases": 33084,
+  "pysastrawi": {
+    "name": "PySastrawi",
+    "language": "Python 3",
+    "correct": 29414,
+    "total": 33084,
+    "accuracyPct": 88.91,
+    "timeSeconds": 1.203,
+    "timeMs": 1202.98,
+    "wordsPerSec": 27501.6,
+    "avgLatencyUs": 36.36,
+    "errorCategories": {
+      "reduplication": 448,
+      "unchanged": 1460,
+      "other": 1762
+    },
+    "sampleFailures": [
+      {
+        "word": "brebesan",
+        "expected": "brebes",
+        "actual": "brebesan"
+      },
+      {
+        "word": "abang-abangan",
+        "expected": "abang",
+        "actual": "abang-abangan"
+      },
+      {
+        "word": "abangan",
+        "expected": "abang",
+        "actual": "abangan"
+      },
+      {
+        "word": "aci-acian",
+        "expected": "aci-aci",
+        "actual": "aci"
+      },
+      {
+        "word": "aci-acinya",
+        "expected": "aci-aci",
+        "actual": "aci"
+      },
+      {
+        "word": "adakalanya",
+        "expected": "adakala",
+        "actual": "adakalanya"
+      },
+      {
+        "word": "aduk-adukan",
+        "expected": "aduk",
+        "actual": "aduk-adukan"
+      },
+      {
+        "word": "adukan",
+        "expected": "aduk",
+        "actual": "adu"
+      },
+      {
+        "word": "afkiran",
+        "expected": "afkir",
+        "actual": "afkiran"
+      },
+      {
+        "word": "ajakan",
+        "expected": "ajak",
+        "actual": "aja"
+      },
+      {
+        "word": "akuan",
+        "expected": "aku",
+        "actual": "akuan"
+      },
+      {
+        "word": "alah-mengalahi",
+        "expected": "alah",
+        "actual": "alah-mengalahi"
+      },
+      {
+        "word": "alahan",
+        "expected": "alah",
+        "actual": "alahan"
+      },
+      {
+        "word": "almuhit",
+        "expected": "muhit",
+        "actual": "almuhit"
+      },
+      {
+        "word": "amai-amai",
+        "expected": "amai",
+        "actual": "ama"
+      },
+      {
+        "word": "anak-anakan",
+        "expected": "anak",
+        "actual": "anak-anakan"
+      },
+      {
+        "word": "anakan",
+        "expected": "anak",
+        "actual": "ana"
+      },
+      {
+        "word": "anjakan",
+        "expected": "anjak",
+        "actual": "anja"
+      },
+      {
+        "word": "arak-arakan",
+        "expected": "arak",
+        "actual": "arak-arakan"
+      },
+      {
+        "word": "arakan",
+        "expected": "arak",
+        "actual": "ara"
+      }
+    ]
+  }
+}

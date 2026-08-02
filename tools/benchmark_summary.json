@@ -1,0 +1,362 @@
+{
+  "totalTestCases": 33084,
+  "results": {
+    "pysastrawi": {
+      "name": "PySastrawi",
+      "language": "Python 3",
+      "correct": 29414,
+      "total": 33084,
+      "accuracyPct": 88.91,
+      "timeSeconds": 1.203,
+      "timeMs": 1202.98,
+      "wordsPerSec": 27501.6,
+      "avgLatencyUs": 36.36,
+      "errorCategories": {
+        "reduplication": 448,
+        "unchanged": 1460,
+        "other": 1762
+      },
+      "sampleFailures": [
+        {
+          "word": "brebesan",
+          "expected": "brebes",
+          "actual": "brebesan"
+        },
+        {
+          "word": "abang-abangan",
+          "expected": "abang",
+          "actual": "abang-abangan"
+        },
+        {
+          "word": "abangan",
+          "expected": "abang",
+          "actual": "abangan"
+        },
+        {
+          "word": "aci-acian",
+          "expected": "aci-aci",
+          "actual": "aci"
+        },
+        {
+          "word": "aci-acinya",
+          "expected": "aci-aci",
+          "actual": "aci"
+        },
+        {
+          "word": "adakalanya",
+          "expected": "adakala",
+          "actual": "adakalanya"
+        },
+        {
+          "word": "aduk-adukan",
+          "expected": "aduk",
+          "actual": "aduk-adukan"
+        },
+        {
+          "word": "adukan",
+          "expected": "aduk",
+          "actual": "adu"
+        },
+        {
+          "word": "afkiran",
+          "expected": "afkir",
+          "actual": "afkiran"
+        },
+        {
+          "word": "ajakan",
+          "expected": "ajak",
+          "actual": "aja"
+        },
+        {
+          "word": "akuan",
+          "expected": "aku",
+          "actual": "akuan"
+        },
+        {
+          "word": "alah-mengalahi",
+          "expected": "alah",
+          "actual": "alah-mengalahi"
+        },
+        {
+          "word": "alahan",
+          "expected": "alah",
+          "actual": "alahan"
+        },
+        {
+          "word": "almuhit",
+          "expected": "muhit",
+          "actual": "almuhit"
+        },
+        {
+          "word": "amai-amai",
+          "expected": "amai",
+          "actual": "ama"
+        },
+        {
+          "word": "anak-anakan",
+          "expected": "anak",
+          "actual": "anak-anakan"
+        },
+        {
+          "word": "anakan",
+          "expected": "anak",
+          "actual": "ana"
+        },
+        {
+          "word": "anjakan",
+          "expected": "anjak",
+          "actual": "anja"
+        },
+        {
+          "word": "arak-arakan",
+          "expected": "arak",
+          "actual": "arak-arakan"
+        },
+        {
+          "word": "arakan",
+          "expected": "arak",
+          "actual": "ara"
+        }
+      ],
+      "speedup": 1.0
+    },
+    "sastrawijs": {
+      "name": "sastrawijs",
+      "language": "JavaScript (Node.js)",
+      "correct": 24900,
+      "total": 33084,
+      "accuracyPct": 75.26,
+      "timeSeconds": 0.0851,
+      "timeMs": 85.08,
+      "wordsPerSec": 388869.43,
+      "avgLatencyUs": 2.57,
+      "errorCategories": {
+        "reduplication": 2721,
+        "unchanged": 2812,
+        "other": 2651
+      },
+      "sampleFailures": [
+        {
+          "word": "brebesan",
+          "expected": "brebes",
+          "actual": "brebesan"
+        },
+        {
+          "word": "abang-abangan",
+          "expected": "abang",
+          "actual": "abang-abangan"
+        },
+        {
+          "word": "abangan",
+          "expected": "abang",
+          "actual": "abangan"
+        },
+        {
+          "word": "abar-abar",
+          "expected": "abar",
+          "actual": "abar-abar"
+        },
+        {
+          "word": "abuh-abuhan",
+          "expected": "abuh",
+          "actual": "abuh-abuhan"
+        },
+        {
+          "word": "acak-acak",
+          "expected": "acak",
+          "actual": "acak-acak"
+        },
+        {
+          "word": "acak-acakan",
+          "expected": "acak",
+          "actual": "acak-acakan"
+        },
+        {
+          "word": "acap-acap",
+          "expected": "acap",
+          "actual": "acap-acap"
+        },
+        {
+          "word": "aci-acian",
+          "expected": "aci-aci",
+          "actual": "aci-acian"
+        },
+        {
+          "word": "aci-acinya",
+          "expected": "aci-aci",
+          "actual": "aci-acinya"
+        },
+        {
+          "word": "aco-acoan",
+          "expected": "aco",
+          "actual": "aco-acoan"
+        },
+        {
+          "word": "acum-acuman",
+          "expected": "acum",
+          "actual": "acum-acuman"
+        },
+        {
+          "word": "ada-adanya",
+          "expected": "ada",
+          "actual": "ada-adanya"
+        },
+        {
+          "word": "ada-adanyakah",
+          "expected": "ada",
+          "actual": "ada-adanyakah"
+        },
+        {
+          "word": "adakalanya",
+          "expected": "adakala",
+          "actual": "adakalanya"
+        },
+        {
+          "word": "adang-adang",
+          "expected": "adang",
+          "actual": "adang-adang"
+        },
+        {
+          "word": "adang-adangan",
+          "expected": "adang",
+          "actual": "adang-adangan"
+        },
+        {
+          "word": "adik-beradik",
+          "expected": "adik",
+          "actual": "adik-beradik"
+        },
+        {
+          "word": "aduk-adukan",
+          "expected": "aduk",
+          "actual": "aduk-adukan"
+        },
+        {
+          "word": "adukan",
+          "expected": "aduk",
+          "actual": "adu"
+        }
+      ],
+      "speedup": 14.14
+    },
+    "snowballjs": {
+      "name": "snowball-js",
+      "language": "JavaScript (Node.js)",
+      "correct": 27334,
+      "total": 33084,
+      "accuracyPct": 82.62,
+      "timeSeconds": 0.0375,
+      "timeMs": 37.47,
+      "wordsPerSec": 882960.5,
+      "avgLatencyUs": 1.13,
+      "errorCategories": {
+        "reduplication": 2678,
+        "unchanged": 206,
+        "other": 2866
+      },
+      "sampleFailures": [
+        {
+          "word": "abang-abangan",
+          "expected": "abang",
+          "actual": "abang-abang"
+        },
+        {
+          "word": "abar-abar",
+          "expected": "abar",
+          "actual": "abar-abar"
+        },
+        {
+          "word": "abuh-abuhan",
+          "expected": "abuh",
+          "actual": "abuh-abuh"
+        },
+        {
+          "word": "acak-acak",
+          "expected": "acak",
+          "actual": "acak-acak"
+        },
+        {
+          "word": "acak-acakan",
+          "expected": "acak",
+          "actual": "acak-aca"
+        },
+        {
+          "word": "acakan",
+          "expected": "acak",
+          "actual": "aca"
+        },
+        {
+          "word": "acap-acap",
+          "expected": "acap",
+          "actual": "acap-acap"
+        },
+        {
+          "word": "aco-acoan",
+          "expected": "aco",
+          "actual": "aco-aco"
+        },
+        {
+          "word": "acum-acuman",
+          "expected": "acum",
+          "actual": "acum-acum"
+        },
+        {
+          "word": "ada-adanya",
+          "expected": "ada",
+          "actual": "ada-ada"
+        },
+        {
+          "word": "ada-adanyakah",
+          "expected": "ada",
+          "actual": "ada-ada"
+        },
+        {
+          "word": "adang-adang",
+          "expected": "adang",
+          "actual": "adang-adang"
+        },
+        {
+          "word": "adang-adangan",
+          "expected": "adang",
+          "actual": "adang-adang"
+        },
+        {
+          "word": "adik-beradik",
+          "expected": "adik",
+          "actual": "adik-beradik"
+        },
+        {
+          "word": "aduk-adukan",
+          "expected": "aduk",
+          "actual": "aduk-adu"
+        },
+        {
+          "word": "adukan",
+          "expected": "aduk",
+          "actual": "adu"
+        },
+        {
+          "word": "agak-agak",
+          "expected": "agak",
+          "actual": "agak-agak"
+        },
+        {
+          "word": "ajakan",
+          "expected": "ajak",
+          "actual": "aja"
+        },
+        {
+          "word": "aji-aji",
+          "expected": "aji",
+          "actual": "aji-aji"
+        },
+        {
+          "word": "aji-ajian",
+          "expected": "aji",
+          "actual": "aji-aji"
+        }
+      ],
+      "speedup": 32.08
+    }
+  }
+}
