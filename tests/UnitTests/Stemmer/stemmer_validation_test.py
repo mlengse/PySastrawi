@@ -20,6 +20,11 @@ class Test_StemmerValidationTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.stemmer.stem(object())
 
+    def test_StemRaisesValueErrorOnOversizedInput(self):
+        limit = Stemmer.MAX_CHARACTER_LENGTH
+        with self.assertRaises(ValueError):
+            self.stemmer.stem("a" * (limit + 1))
+
     def test_StemAcceptsStringInput(self):
         # Should not raise
         result = self.stemmer.stem("string")

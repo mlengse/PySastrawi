@@ -220,8 +220,10 @@ Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dar
   ```bash
   python -m unittest tests/UnitTests/Stemmer/stemmer_test.py -v
   ```
-- **Status saat ini**: **187 test lulus**.
-- Cakupan: aturan disambiguator 1–42, pipeline Context, visitor, dictionary, cache hit/miss + **konkurensi**, validasi input (`TypeError`/`ValueError`), stop word remover, **konstruksi `VisitorProvider`**, fungsional + integrasi (pakai `subTest`).
+- **Status saat ini**: **190 test lulus**.
+- Cakupan: aturan disambiguator 1–42, pipeline Context, visitor, dictionary, cache hit/miss + **konkurensi**, validasi input (`TypeError`/`ValueError`), jalur error factory (`RuntimeError` saat file data hilang), stop word remover, **konstruksi `VisitorProvider`**, fungsional + integrasi (pakai `subTest`).
+- **Coverage**: ~96% (branch coverage via `coverage`, lihat `.coveragerc`; `source = Sastrawi`, `branch = True`). Yang tidak ter-cover: metode `pass` pada `*Interface.py`, `__init__.py` kosong, dan beberapa cabang defensif/dead code (`Context.py:52,128`, `Stemmer.py:71`, getter `Removal.py:14,20`).
+- **CI**: workflow GitHub Actions di `.github/workflows/CI.yml` — install `pip install -e .` + `unittest discover` pada Python 3.8–3.12 (push `master`/`main`, pull request).
 - Catatan: karena `Sastrawi` berlokasi di `src/`, test dijalankan dengan paket ter-install (`uv pip install -e .`) atau `PYTHONPATH=src`.
 
 ---

@@ -150,6 +150,6 @@ python -m unittest discover tests -p '*_test*.py' -v
 python -m unittest tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test.py -v
 ```
 
-**Hasil**: 187 test OK. Smoke test instalasi: contoh SPEC §3.1 → `ekonomi indonesia sedang dalam tumbuh yang bangga`, §3.2 → `''`; `TypeError`/`ValueError` terverifikasi; semua data file ter-packaging.
+**Hasil**: 190 test OK. Coverage ~96% (branch) dengan jalur error (`TypeError`/`ValueError`, `RuntimeError` file data hilang) ter-cover; sisa yang tidak ter-cover adalah interface `pass`, `__init__.py` kosong, dan dead code defensif. CI GitHub Actions (`.github/workflows/CI.yml`) menjalankan `pip install -e .` + `unittest discover` pada Python 3.8–3.12. Smoke test instalasi: contoh SPEC §3.1 → `ekonomi indonesia sedang dalam tumbuh yang bangga`, §3.2 → `''`; semua data file ter-packaging.
 
 Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–3 selesai, suite hijau (187), tidak ada placeholder docstring tersisa, dan `pysastrawi.md` merefleksikan status terbaru.

@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.Stemmer.CachedStemmer import CachedStemmer
 
@@ -27,6 +28,12 @@ class TestStemmerFactory(unittest.TestCase):
         result = factory.get_words_from_file()
         self.assertIsInstance(result, list)
         self.assertGreater(len(result), 0)
+
+    def test_getWordsFromFileRaisesWhenFileMissing(self):
+        factory = StemmerFactory()
+        with unittest.mock.patch('os.path.isfile', return_value=False):
+            with self.assertRaises(RuntimeError):
+                factory.get_words_from_file()
 
 if __name__ == '__main__':
     unittest.main()
