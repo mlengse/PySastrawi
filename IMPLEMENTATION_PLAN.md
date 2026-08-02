@@ -11,7 +11,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 3. **Meningkatkan kualitas dokumentasi data** (SPEC §6, item M8).
 4. **Mempertahankan invariant inti**: tanpa dependensi eksternal, Python ≥ 3.8, 178+ test lulus.
 
-> **Status putaran**: Fase 1–3 **SELESAI** ✅ (Juli 2026). Fase 4 (IP-4.1–4.3) tetap backlog major version.
+> **Status putaran**: Fase 1–4 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire).
 
 ## 2. Prinsip Kerja
 
@@ -26,7 +26,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 ## 3. Definisi Selesai (Definition of Done)
 
 - [x] Test suite penuh lulus: `python -m unittest discover tests -p '*_test*.py' -v`
-- [x] Jumlah test tidak berkurang (baseline 178 → **187**)
+- [x] Jumlah test tidak berkurang (baseline 178 → **190**)
 - [x] Tidak ada dependensi baru di `setup.py`/`pyproject.toml`
 - [x] `__init__.py` tetap kosong (0/11 non-empty; konvensi import path lengkap)
 - [x] Status task diperbarui di `pysastrawi.md` (kolom Status / tabel terdefer)
@@ -42,7 +42,8 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 
 ### Hasil (post-implementasi)
 
-- Test: **187 lulus** (+9: 2 konkurensi cache, 7 VisitorProvider)
+- Test: **187 lulus** (+9: 2 konkurensi cache, 7 VisitorProvider) → **190** setelah Fase 3 (error-path factory + stem)
+- Versi: **2.0.0** (Fase 4: IP-4.1 ABC + IP-4.2 rename → rilis major)
 - Placeholder docstring: **0**
 - Modul dengan `__all__`: **7** (modul kelas publik; `__init__.py` tetap kosong)
 - Data: `StopWordRemover/data/stop-words.txt` (809 kata), `Stemmer/data/README.md`
@@ -79,13 +80,23 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 | IP-3.2 | Smoke test instalasi | SPEC §8 | `pip install -e .` berhasil; import `StemmerFactory` & `StopWordRemoverFactory` di interpreter bersih tanpa `PYTHONPATH`; contoh dari SPEC §3.1 & §3.2 menghasilkan output sesuai | ✅ via `uv pip install -e .` |
 | IP-3.3 | Verifikasi batas input & validasi | SPEC §2 | `TypeError` untuk non-`str`, `ValueError` untuk > 1.000.000 karakter (sudah di-cover test; konfirmasi tanpa regresi) | ✅ |
 
-### Fase 4 — Backlog major version (TIDAK dikerjakan di putaran ini)
+### Fase 4 — Rilis major v2.0.0 ✅ DONE
 
-| ID | Task | Ref | Alasan |
-|----|------|-----|--------|
-| IP-4.1 | Migrasi interface ke `abc.ABC` | SPEC §9 (M5) | Breaking untuk subclass; butuh rilis mayor |
-| IP-4.2 | Refactor penamaan camelCase → snake_case | SPEC §9 (L2) | Breaking public API; rilis mayor tersendiri |
-| IP-4.3 | Integrasi `InvalidAffixPairSpecification` ke pipeline | SPEC §10 (M3) | Perlu evaluasi linguistik & efek akurasi |
+| ID | Task | Ref | File | Kriteria Diterima | Status |
+|----|------|-----|------|-------------------|--------|
+| IP-4.1 | Migrasi interface ke `abc.ABC` | SPEC §9 (M5) | `DictionaryInterface.py`, `CacheInterface.py`, `StemmerInterface.py`, `RemovalInterface.py`, `ContextInterface.py` (+ `Context.py`, `Removal.py`, `Stemmer.py`, `CachedStemmer.py`, `ArrayDictionary.py` di-wire) | Semua interface `abc.ABC` dengan `@abstractmethod`; kelas konkret inherit interface dan mengimplementasikan semua abstract method; probe membuktikan `BadDictionary/BadCache/BadContext/BadRemoval` diblokir `TypeError` | ✅ |
+| IP-4.2 | Refactor penamaan camelCase → snake_case | SPEC §9 (L2) | seluruh `src/` + test yang memakai nama lama | `normalizedText`, `delegatedStemmer`, `resultCache`, `stopWords`, `dictionaryFile`, `removedPart`, `invalidAffixes` (dst.) → snake_case; `setup.py` → `2.0.0`; 190 test hijau | ✅ |
+| IP-4.3 | Evaluasi integrasi `InvalidAffixPairSpecification` ke pipeline | SPEC §10 (M3) | `Context.py` (percobaan, di-revert), `InvalidAffixPairSpecification.py` (M4) | Keputusan berbasis bukti: **TIDAK di-wire** — guard `remove_prefixes()` membuat 16 test gagal & menurunkan akurasi (perbandingan KBBI); spec dipertahankan sebagai utilitas; regex di-precompile | ✅ (dievaluasi, ditolak) |
+
+**Catatan IP-4.1**: `ContextInterface` method yang di-abstract-kan: `get_original_word`, `set_current_word`, `get_current_word`, `get_dictionary`, `stop_process`, `process_is_stopped`, `add_removal`, `get_removals`. Test mock visitor diubah dari `context.current_word = ...` menjadi `context.stop_process()` (`dont_stem_short_word_test.py`, `visitors_test.py`).
+
+**Catatan IP-4.2**: sisa pattern camelCase setelah scan seluruh repo hanya terdapat di **docstring** disambiguator (`berV`, `rV`, `beC1erC2`, `mengV`, `kV`, `ngV`, `menyV`, `nyV`, `sV`, `mempA/V`, `pA/V`, `berCAP`) — itu notasi aturan dari paper Asian J., **dibiarkan**.
+
+**Catatan IP-4.3 (bukti empiris)**: dengan guard `if self._invalid_affix_pair.is_satisfied_by(self.original_word): return` di awal `Context.remove_prefixes()`:
+- 16 test suite gagal.
+- Output yang tadinya benar jadi salah: `dimakan→dimakan` (benar: `makan`), `berlari→berlari` (benar: `lari`), `perkataan→perkataan` (benar: `kata`), `dipukulan→dipukulan` (benar: `pukul`).
+- Upstream PHP `sastrawi/sastrawi` juga tidak pernah me-wire spec ini (hanya dipakai di test-nya sendiri; test `perkataan` bahkan berkomentar `// wtf?`).
+- Keputusan: spec dipertahankan sebagai utilitas ber-test + regex di-precompile (M4); tidak di-wire untuk menghindari penurunan akurasi.
 
 ---
 
@@ -127,6 +138,12 @@ IP-1.4 (__all__) ────┘         │
 11. `pysastrawi.md` — update status tiap task ✅
 12. `SPEC.md` — sinkronisasi perilaku baru (Cache thread-safe, stop words data file, `__all__`, hasil kamus) ✅
 
+**Fase 4 (v2.0.0)**
+13. Interface → `abc.ABC` (IP-4.1): `Dictionary/DictionaryInterface.py`, `Stemmer/StemmerInterface.py`, `Stemmer/Cache/CacheInterface.py`, `Stemmer/Context/RemovalInterface.py`, `Stemmer/Context/ContextInterface.py` ✅
+14. Kelas konkret di-wire + rename snake_case (IP-4.2): `ArrayDictionary.py`, `Context.py`, `Removal.py`, `Stemmer.py`, `CachedStemmer.py`, `StemmerFactory.py`, `StopWordRemoverFactory.py`, `Visitor/DontStemShortWord.py`, `Visitor/Remove*.py`, `Visitor/AbstractDisambiguatePrefixRule.py`, `setup.py` (`2.0.0`) ✅
+15. Test mock di-update (IP-4.2): `tests/UnitTests/Stemmer/Context/Visitor/dont_stem_short_word_test.py`, `visitors_test.py` ✅
+16. IP-4.3: `Morphology/InvalidAffixPairSpecification.py` — M4 precompile regex; **tidak di-wire** ke `Context.py` ✅
+
 ---
 
 ## 8. Risiko & Mitigasi
@@ -150,6 +167,8 @@ python -m unittest discover tests -p '*_test*.py' -v
 python -m unittest tests/UnitTests/Stemmer/Context/Visitor/visitor_provider_test.py -v
 ```
 
-**Hasil**: 190 test OK. Coverage ~96% (branch) dengan jalur error (`TypeError`/`ValueError`, `RuntimeError` file data hilang) ter-cover; sisa yang tidak ter-cover adalah interface `pass`, `__init__.py` kosong, dan dead code defensif. CI GitHub Actions (`.github/workflows/CI.yml`) menjalankan `pip install -e .` + `unittest discover` pada Python 3.8–3.12. Smoke test instalasi: contoh SPEC §3.1 → `ekonomi indonesia sedang dalam tumbuh yang bangga`, §3.2 → `''`; semua data file ter-packaging.
+**Hasil (putaran Fase 1–3)**: 190 test OK. Coverage ~96% (branch) dengan jalur error (`TypeError`/`ValueError`, `RuntimeError` file data hilang) ter-cover; sisa yang tidak ter-cover adalah abstract method interface, `__init__.py` kosong, dan dead code defensif. CI GitHub Actions (`.github/workflows/ci.yml`) menjalankan `pip install -e .` + `unittest discover` pada Python 3.8–3.12. Smoke test instalasi: contoh SPEC §3.1 → `ekonomi indonesia sedang dalam tumbuh yang bangga`, §3.2 → `''`; semua data file ter-packaging.
 
-Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–3 selesai, suite hijau (187), tidak ada placeholder docstring tersisa, dan `pysastrawi.md` merefleksikan status terbaru.
+**Hasil (Fase 4 / v2.0.0)**: seluruh task IP-4.1–4.3 selesai. Interface → `abc.ABC` (probe: instansiasi kelas `Bad*` gagal `TypeError`, semua kelas konkret tetap instantiate); rename camelCase → snake_case tuntas (scan repo bersih; sisa hanya notasi rule di docstring). IP-4.3 dievaluasi dan **ditolak** (wiring menurunkan akurasi; bukti di catatan IP-4.3). Suite: **190 test OK**.
+
+Kriteria rilis putaran ini: **terpenuhi** — seluruh task Fase 1–4 selesai, suite hijau (190), tidak ada placeholder docstring tersisa, tidak ada camelCase di kode (hanya docstring rule), dan `pysastrawi.md` merefleksikan status terbaru.

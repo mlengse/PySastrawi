@@ -1,30 +1,36 @@
-class ContextInterface:
+from abc import ABC, abstractmethod
+
+class ContextInterface(ABC):
     """Interface for the stemming context state."""
 
-    def getOriginalWord(self):
-        pass
+    @abstractmethod
+    def get_original_word(self):
+        ...
 
-    def setCurrentWord(self, word):
-        pass
+    @abstractmethod
+    def set_current_word(self, word):
+        ...
 
-    def getCurrentWord(self):
-        pass
+    @abstractmethod
+    def get_current_word(self):
+        ...
 
-    def getDictionary(self):
-        pass
+    @abstractmethod
+    def get_dictionary(self):
+        ...
 
-    def stopProcess(self):
-        pass
+    @abstractmethod
+    def stop_process(self):
+        ...
 
-    def processIsStopped(self):
-        pass
+    @abstractmethod
+    def process_is_stopped(self):
+        ...
 
-    def addRemoval(self, removal):
-        pass
+    @abstractmethod
+    def add_removal(self, removal):
+        ...
 
-    def getRemovals(self):
-        pass
-
-
-
-
+    @abstractmethod
+    def get_removals(self):
+        ...

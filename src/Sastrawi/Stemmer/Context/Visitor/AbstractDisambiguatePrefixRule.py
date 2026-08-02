@@ -17,9 +17,9 @@ class AbstractDisambiguatePrefixRule:
         if result is None:
             return
 
-        removedPart = context.current_word.replace(result, '', 1)
+        removed_part = context.current_word.replace(result, '', 1)
 
-        removal = Removal(self, context.current_word, result, removedPart, 'DP')
+        removal = Removal(self, context.current_word, result, removed_part, 'DP')
 
         context.add_removal(removal)
         context.current_word = result

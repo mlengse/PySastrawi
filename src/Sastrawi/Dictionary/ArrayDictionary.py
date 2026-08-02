@@ -1,6 +1,8 @@
 __all__ = ['ArrayDictionary']
 
-class ArrayDictionary:
+from Sastrawi.Dictionary.DictionaryInterface import DictionaryInterface
+
+class ArrayDictionary(DictionaryInterface):
     """Dictionary of base words backed by a set for O(1) lookups."""
 
     def __init__(self, words=None):

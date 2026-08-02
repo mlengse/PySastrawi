@@ -16,22 +16,22 @@ class StemmerFactory:
         dictionary = ArrayDictionary(words)
         stemmer = Stemmer(dictionary)
 
-        resultCache = ArrayCache()
-        cachedStemmer = CachedStemmer(resultCache, stemmer)
+        result_cache = ArrayCache()
+        cached_stemmer = CachedStemmer(result_cache, stemmer)
 
-        return cachedStemmer
+        return cached_stemmer
 
     def get_words(self):
         return self.get_words_from_file()
 
     def get_words_from_file(self):
         current_dir = os.path.dirname(os.path.realpath(__file__))
-        dictionaryFile = os.path.join(current_dir, 'data', 'kata-dasar.txt')
-        if not os.path.isfile(dictionaryFile):
+        dictionary_file = os.path.join(current_dir, 'data', 'kata-dasar.txt')
+        if not os.path.isfile(dictionary_file):
             raise RuntimeError('Dictionary file is missing. It seems that your installation is corrupted.')
 
-        dictionaryContent = ''
-        with open(dictionaryFile, 'r', encoding='utf-8') as f:
-            dictionaryContent = f.read()
+        dictionary_content = ''
+        with open(dictionary_file, 'r', encoding='utf-8') as f:
+            dictionary_content = f.read()
 
-        return dictionaryContent.split('\n')
+        return dictionary_content.split('\n')

@@ -16,7 +16,7 @@ class MockContext:
     def add_removal(self, removal):
         self.removals.append(removal)
 
-    def stopProcess(self):
+    def stop_process(self):
         self.process_is_stopped = True
 
 

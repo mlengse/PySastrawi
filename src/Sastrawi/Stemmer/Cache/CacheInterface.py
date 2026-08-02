@@ -1,13 +1,16 @@
-class CacheInterface:
+from abc import ABC, abstractmethod
+
+class CacheInterface(ABC):
     """Interface for a cache storing word-to-stem mappings."""
 
+    @abstractmethod
     def has(self, key):
-        pass
+        ...
 
+    @abstractmethod
     def set(self, key, value):
-        pass
+        ...
 
+    @abstractmethod
     def get(self, key):
-        pass
-
-
+        ...

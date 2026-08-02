@@ -1,21 +1,24 @@
-class RemovalInterface:
+from abc import ABC, abstractmethod
+
+class RemovalInterface(ABC):
     """Interface for an affix removal record."""
 
+    @abstractmethod
     def get_visitor(self):
-        pass
+        ...
 
+    @abstractmethod
     def get_subject(self):
-        pass
+        ...
 
+    @abstractmethod
     def get_result(self):
-        pass
+        ...
 
+    @abstractmethod
     def get_removed_part(self):
-        pass
+        ...
 
+    @abstractmethod
     def get_affix_type(self):
-        pass
-
-
-
-
+        ...

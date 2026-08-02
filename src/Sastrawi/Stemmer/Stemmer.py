@@ -1,11 +1,12 @@
 import re
+from Sastrawi.Stemmer.StemmerInterface import StemmerInterface
 from Sastrawi.Stemmer.Context.Visitor.VisitorProvider import VisitorProvider
 from Sastrawi.Stemmer.Filter.TextNormalizer import TextNormalizer
 from Sastrawi.Stemmer.Context.Context import Context
 
 __all__ = ['Stemmer']
 
-class Stemmer:
+class Stemmer(StemmerInterface):
     """Indonesian Stemmer.
     Nazief & Adriani, CS Stemmer, ECS Stemmer, Improved ECS.
 
@@ -32,9 +33,9 @@ class Stemmer:
         if len(text) > self.MAX_CHARACTER_LENGTH:
             raise ValueError("Text length exceeds the maximum allowed length of " + str(self.MAX_CHARACTER_LENGTH) + " characters.")
 
-        normalizedText = TextNormalizer.normalize_text(text)
+        normalized_text = TextNormalizer.normalize_text(text)
 
-        words = normalizedText.split(' ')
+        words = normalized_text.split(' ')
         stems = []
 
         for word in words:
@@ -80,15 +81,15 @@ class Stemmer:
             words[1] = matches.group(2) + '-' + suffix
 
         #berbalas-balasan -> balas
-        rootWord1 = self.stem_singular_word(words[0])
-        rootWord2 = self.stem_singular_word(words[1])
+        root_word1 = self.stem_singular_word(words[0])
+        root_word2 = self.stem_singular_word(words[1])
 
         #meniru-nirukan -> tiru
-        if not self.dictionary.contains(words[1]) and rootWord2 == words[1]:
-            rootWord2 = self.stem_singular_word('me' + words[1])
+        if not self.dictionary.contains(words[1]) and root_word2 == words[1]:
+            root_word2 = self.stem_singular_word('me' + words[1])
 
-        if rootWord1 == rootWord2:
-            return rootWord1
+        if root_word1 == root_word2:
+            return root_word1
         else:
             return plural
 

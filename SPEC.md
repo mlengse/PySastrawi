@@ -48,9 +48,9 @@ Kelas yang terlibat:
   - `stem_word(word) -> str` — router: plural vs singular.
   - `is_plural(word) -> bool`, `stem_plural_word(word)`, `stem_singular_word(word)`.
 - **`CachedStemmer`** (decorator atas `Stemmer`)
-  - `stem(text) -> str` — normalisasi + split, per kata: `cache.has(word)` → ambil dari cache, selain itu delegasi `delegatedStemmer.stem_word(word)` lalu simpan ke cache.
+  - `stem(text) -> str` — normalisasi + split, per kata: `cache.has(word)` → ambil dari cache, selain itu delegasi `delegated_stemmer.stem_word(word)` lalu simpan ke cache.
   - `get_cache()` — akses objek cache.
-  - `__init__(cache, delegatedStemmer)`.
+  - `__init__(cache, delegated_stemmer)`.
 
 ### 3.2 Stop Word Remover
 
@@ -222,8 +222,8 @@ Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dar
   ```
 - **Status saat ini**: **190 test lulus**.
 - Cakupan: aturan disambiguator 1–42, pipeline Context, visitor, dictionary, cache hit/miss + **konkurensi**, validasi input (`TypeError`/`ValueError`), jalur error factory (`RuntimeError` saat file data hilang), stop word remover, **konstruksi `VisitorProvider`**, fungsional + integrasi (pakai `subTest`).
-- **Coverage**: ~96% (branch coverage via `coverage`, lihat `.coveragerc`; `source = Sastrawi`, `branch = True`). Yang tidak ter-cover: metode `pass` pada `*Interface.py`, `__init__.py` kosong, dan beberapa cabang defensif/dead code (`Context.py:52,128`, `Stemmer.py:71`, getter `Removal.py:14,20`).
-- **CI**: workflow GitHub Actions di `.github/workflows/CI.yml` — install `pip install -e .` + `unittest discover` pada Python 3.8–3.12 (push `master`/`main`, pull request).
+- **Coverage**: ~96% (branch coverage via `coverage`, lihat `.coveragerc`; `source = Sastrawi`, `branch = True`). Yang tidak ter-cover: metode `abstractmethod` pada `*Interface.py`, `__init__.py` kosong, dan beberapa cabang defensif/dead code (`Context.py:52,128`, `Stemmer.py:71`, getter `Removal.py:14,20`).
+- **CI**: workflow GitHub Actions di `.github/workflows/ci.yml` — install `pip install -e .` + `unittest discover` pada Python 3.8–3.12 (push `master`/`main`, pull request).
 - Catatan: karena `Sastrawi` berlokasi di `src/`, test dijalankan dengan paket ter-install (`uv pip install -e .`) atau `PYTHONPATH=src`.
 
 ---
@@ -232,8 +232,8 @@ Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dar
 
 - **Tanpa dependensi eksternal** — hanya stdlib; minimal risiko supply chain.
 - **`__init__.py` semua kosong** — import harus path lengkap, mis. `from Sastrawi.Stemmer.StemmerFactory import StemmerFactory`.
-- **Interface (`*Interface.py`) tidak memakai `abc.ABC`** — metode hanya `pass`. Didefer (breaking change).
-- **Naming campuran camelCase/snake_case** — warisan port PHP, mis. `normalizedText` vs `current_word`. Refactor breaking didefer ke major version.
+- **Interface (`*Interface.py`) memakai `abc.ABC` + `@abstractmethod`** — subclass wajib mengimplementasikan kontrak; instansiasi langsung diblokir `TypeError` (IP-4.1, v2.0.0).
+- **Naming snake_case** — semua nama publik/kampung (atribut, parameter, metode) memakai snake_case; hanya notasi rule di docstring disambiguator (`berV`, `rV`, `beC1erC2`, dst.) yang tetap seperti di paper (IP-4.2, v2.0.0).
 - **`Context.restore_prefix()`** memakai `removals[0]` (bukan loop-and-break).
 - **Cache `ArrayCache` thread-safe** — operasi `set/get/has` dilindungi `threading.Lock`.
 - **`__all__`** ada pada modul kelas publik (`StemmerFactory`, `Stemmer`, `CachedStemmer`, `StopWordRemover`, `StopWordRemoverFactory`, `ArrayDictionary`, `ArrayCache`); `__init__.py` tetap kosong.
@@ -249,6 +249,11 @@ Item yang **sengaja didefer**:
 
 | Item | Alasan |
 |------|--------|
-| Refactor penamaan camelCase → snake_case (L2) | Breaking public API; untuk major version |
-| Migrasi interface ke ABC (M5) | Breaking untuk subclass; prioritas rendah |
-| `InvalidAffixPairSpecification` (M3) | Dead code ber-test; dipertahankan sebagai utilitas |
+| `InvalidAffixPairSpecification` (M3) | **TIDAK di-wire** ke pipeline setelah IP-4.3 dievaluasi: bukti empiris menunjukkan wiring menurunkan akurasi (16 test gagal; `dimakan→dimakan`, `perkataan→perkataan` padahal stem benar `makan`/`kata`; upstream PHP juga meninggalkannya sebagai dead code — komentar `// wtf?` di test-nya). Dipertahankan sebagai utilitas; regex di-precompile (M4) |
+
+Item yang **sudah dikerjakan pada v2.0.0 (Fase 4)**:
+
+| Item | Keterangan |
+|------|------------|
+| Refactor penamaan camelCase → snake_case (L2) | IP-4.2 |
+| Migrasi interface ke ABC (M5) | IP-4.1 |

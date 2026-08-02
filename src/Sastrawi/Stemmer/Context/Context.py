@@ -1,7 +1,8 @@
 from Sastrawi.Stemmer.ConfixStripping.PrecedenceAdjustmentSpecification \
    import PrecedenceAdjustmentSpecification
+from Sastrawi.Stemmer.Context.ContextInterface import ContextInterface
 
-class Context:
+class Context(ContextInterface):
     """Stemming Context using Nazief and Adriani, CS, ECS, Improved ECS"""
 
     def __init__(self, original_word, dictionary, visitor_provider):
@@ -10,7 +11,7 @@ class Context:
         self.dictionary = dictionary
         self.visitor_provider = visitor_provider
 
-        self.process_is_stopped = False
+        self._process_is_stopped = False
         self.removals = []
         self.visitors = []
         self.suffix_visitors = []
@@ -24,11 +25,29 @@ class Context:
         self.suffix_visitors = self.visitor_provider.get_suffix_visitors()
         self.prefix_visitors = self.visitor_provider.get_prefix_visitors()
 
-    def stopProcess(self):
-        self.process_is_stopped = True
+    def get_original_word(self):
+        return self.original_word
+
+    def set_current_word(self, word):
+        self.current_word = word
+
+    def get_current_word(self):
+        return self.current_word
+
+    def get_dictionary(self):
+        return self.dictionary
+
+    def stop_process(self):
+        self._process_is_stopped = True
+
+    def process_is_stopped(self):
+        return self._process_is_stopped
 
     def add_removal(self, removal):
         self.removals.append(removal)
+
+    def get_removals(self):
+        return self.removals
 
     def execute(self):
         """Execute stemming process; the result can be retrieved with result"""
@@ -51,11 +70,11 @@ class Context:
         if self.dictionary.contains(self.current_word):
             return
 
-        csPrecedenceAdjustmentSpecification = PrecedenceAdjustmentSpecification()
+        cs_precedence_spec = PrecedenceAdjustmentSpecification()
 
         #Confix Stripping
         #Try to remove prefix before suffix if the specification is met
-        if csPrecedenceAdjustmentSpecification.is_satisfied_by(self.original_word):
+        if cs_precedence_spec.is_satisfied_by(self.original_word):
             #step 4, 5
             self.remove_prefixes()
             if self.dictionary.contains(self.current_word):
@@ -101,18 +120,18 @@ class Context:
             self.accept(visitor)
             if self.dictionary.contains(self.current_word):
                 return self.current_word
-            if self.process_is_stopped:
+            if self.process_is_stopped():
                 return self.current_word
 
     def accept_prefix_visitors(self, visitors):
-        removalCount = len(self.removals)
+        removal_count = len(self.removals)
         for visitor in visitors:
             self.accept(visitor)
             if self.dictionary.contains(self.current_word):
                 return self.current_word
-            if self.process_is_stopped:
+            if self.process_is_stopped():
                 return self.current_word
-            if len(self.removals) > removalCount:
+            if len(self.removals) > removal_count:
                 return
 
     def loop_pengembalian_akhiran(self):

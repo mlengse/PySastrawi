@@ -7,7 +7,7 @@ class MockContext:
         self.current_word = ''
         self.stopped = False
 
-    def stopProcess(self):
+    def stop_process(self):
         self.stopped = True
 
 

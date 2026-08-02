@@ -1,5 +1,8 @@
-class DictionaryInterface:
-    """Interface definition of dictionary"""
+from abc import ABC, abstractmethod
 
+class DictionaryInterface(ABC):
+    """Interface definition of dictionary."""
+
+    @abstractmethod
     def contains(self, word):
-        raise NotImplementedError('you must implement this method manually')
+        ...
