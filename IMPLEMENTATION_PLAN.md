@@ -11,7 +11,7 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 3. **Meningkatkan kualitas dokumentasi data** (SPEC §6, item M8).
 4. **Mempertahankan invariant inti**: tanpa dependensi eksternal, Python ≥ 3.8, 178+ test lulus.
 
-> **Status putaran**: Fase 1–4 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire). **Berikutnya**: Fase 5 (release engineering v2.0.0) dan Fase 6 (validasi akurasi vs KBBI) — belum dikerjakan.
+> **Status putaran**: Fase 1–5 **SELESAI** ✅ (Agustus 2026). Fase 4 adalah rilis major **v2.0.0** (IP-4.1 ABC, IP-4.2 rename, IP-4.3 dievaluasi → TIDAK di-wire). Fase 5 (release engineering) **selesai**: CHANGELOG, wheel/sdist, verifikasi instalasi, tag + GitHub Release. **Berikutnya**: Fase 6 (validasi akurasi vs KBBI) — belum dikerjakan.
 
 ## 2. Prinsip Kerja
 
@@ -98,14 +98,14 @@ Diturunkan dari [SPEC.md](./SPEC.md). Berisi pekerjaan untuk menutup gap yang te
 - Upstream PHP `sastrawi/sastrawi` juga tidak pernah me-wire spec ini (hanya dipakai di test-nya sendiri; test `perkataan` bahkan berkomentar `// wtf?`).
 - Keputusan: spec dipertahankan sebagai utilitas ber-test + regex di-precompile (M4); tidak di-wire untuk menghindari penurunan akurasi.
 
-### Fase 5 — Release engineering v2.0.0 🚧 PLANNED
+### Fase 5 — Release engineering v2.0.0 ✅ DONE
 
 | ID | Task | Ref | Kriteria Diterima | Status |
 |----|------|-----|-------------------|--------|
 | IP-5.1 | Tulis `CHANGELOG.md` v2.0.0 | SPEC §10 | Mencatat breaking changes (ABC, rename), perbaikan, dan tambahan sejak v1.2.1; format Keep a Changelog | ✅ `CHANGELOG.md` |
 | IP-5.2 | Build wheel + sdist | SPEC §7 | `python -m build` menghasilkan `dist/Sastrawi-2.0.0-*.whl` & `.tar.gz`; `twine check dist/*` lulus | ✅ `pysastrawi-2.0.0-py3-none-any.whl` + `.tar.gz`; `twine check` PASSED (perlu `MANIFEST.in` agar sdist menyertakan README/LICENSE/data) |
 | IP-5.3 | Verifikasi instalasi dari wheel bersih | SPEC §3, §8 | `pip install dist/*.whl` di venv baru (tanpa `PYTHONPATH`); contoh SPEC §3.1 & §3.2 output sesuai; data file ter-packaging | ✅ venv bersih (`uv venv` + wheel): §3.1 → `ekonomi indonesia sedang dalam tumbuh`, §3.2 → `''` |
-| IP-5.4 | Tag `v2.0.0` + GitHub Release | — | Tag annotated `v2.0.0`; release notes merujuk CHANGELOG | ⏳ |
+| IP-5.4 | Tag `v2.0.0` + GitHub Release | — | Tag annotated `v2.0.0`; release notes merujuk CHANGELOG | ✅ tag `v2.0.0` + [release](https://github.com/mlengse/PySastrawi/releases/tag/v2.0.0) |
 
 ### Fase 6 — Validasi akurasi vs KBBI 🚧 PLANNED
 
