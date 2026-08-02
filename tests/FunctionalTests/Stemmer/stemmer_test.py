@@ -309,6 +309,7 @@ class TestStemmer(unittest.TestCase):
         data.append(['menjauhi', 'jauh'])
         data.append(['menggilai', 'gila'])
         data.append(['pembangunan', 'bangun'])
+        data.append(['pembelajaran', 'ajar'])
 
         # return the word if not found in the dictionary
         data.append(['marwan', 'marwan'])
