@@ -1,3 +1,5 @@
+__all__ = ['ArrayDictionary']
+
 class ArrayDictionary:
     """Dictionary of base words backed by a set for O(1) lookups."""
 

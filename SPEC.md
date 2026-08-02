@@ -20,7 +20,7 @@ PySastrawi adalah pustaka *stemming* Bahasa Indonesia berbasis Python murni. Tuj
 | Validasi input | `TypeError` bila bukan `str`; `ValueError` bila melebihi batas |
 | Normalisasi | lowercase, non `[a-z0-9 -]` → spasi, kolaps spasi, `strip()` |
 | Output tak ditemukan | kata dikembalikan sebagaimana aslinya (bukan di-stem) |
-| Cache | LRU in-memory via `OrderedDict`, default `max_size=100_000` |
+| Cache | LRU in-memory via `OrderedDict`, default `max_size=100_000`; thread-safe (`threading.Lock`) |
 
 ---
 
@@ -62,7 +62,7 @@ remover = factory.create_stop_word_remover()
 remover.remove("yang dan di")  # -> ""
 ```
 
-- **`StopWordRemoverFactory`** — `create_stop_word_remover()`, `get_stop_words()` (daftar inline ~800 kata).
+- **`StopWordRemoverFactory`** — `create_stop_word_remover()`, `get_stop_words()` (membaca dari `data/stop-words.txt`, ~809 kata), `get_stop_words_from_file()`; `RuntimeError` bila file data tidak ditemukan.
 - **`StopWordRemover`** — `remove(text)`, `get_dictionary()`. Validasi `TypeError`/`ValueError` sama dengan Stemmer.
 
 ### 3.3 Dictionary
@@ -165,13 +165,16 @@ Penghapusan afiks menggunakan `str.replace(removed, '', 1)` (bukan regex) untuk 
 ### 6.1 Kamus kata dasar
 
 - **File**: `src/Sastrawi/Stemmer/data/kata-dasar.txt`
-- **Isi**: ~29.932 baris (versi aktif); `kata-dasar.original.txt` berisi ~42.355 baris (versi rujukan/orisinal).
+- **Isi**: ~29.932 kata (versi aktif); `kata-dasar.original.txt` berisi ~41.940 kata unik (versi rujukan/orisinal).
+- **Selisih**: 14.779 kata unik hanya di orisinal (dihapus), 2.771 hanya di aktif (ditambahkan). Karakterisasi lengkap di [`Stemmer/data/README.md`](src/Sastrawi/Stemmer/data/README.md) — mencakup bentuk berimbuhan (ber-`rootWord`), reduplikasi, nama diri, dan kata daerah.
 - **Format**: satu kata per baris, UTF-8, dipisah `\n`, di-load oleh `StemmerFactory.get_words_from_file()`.
 - Dikirim via `package_data={'': ['data/*.txt']}` di `setup.py`.
 
 ### 6.2 Stop words
 
-- Daftar inline (~800 kata) dalam `StopWordRemoverFactory.get_stop_words()`. Bukan data file (keputusan desain).
+- **File**: `src/Sastrawi/StopWordRemover/data/stop-words.txt` (~809 kata, satu per baris).
+- Dibaca oleh `StopWordRemoverFactory.get_stop_words_from_file()`; `get_stop_words()` tetap menjadi API publik.
+- Dikirim via `package_data` yang sama (`data/*.txt`).
 
 ---
 
@@ -189,12 +192,12 @@ src/Sastrawi/
 │   │   ├── Context.py, ContextInterface.py
 │   │   └── Removal.py, RemovalInterface.py
 │   ├── Filter/            TextNormalizer
-│   ├── data/              kata-dasar.txt, kata-dasar.original.txt
+│   ├── data/              kata-dasar.txt, kata-dasar.original.txt, README.md
 │   ├── Stemmer.py, StemmerInterface.py, StemmerFactory.py, CachedStemmer.py
 ├── Morphology/
 │   ├── Disambiguator/     DisambiguatorPrefixRule1..42 (tanpa 22, 33)
 │   └── InvalidAffixPairSpecification.py   (utilitas; tidak dipakai pipeline)
-└── StopWordRemover/       StopWordRemover, StopWordRemoverFactory
+└── StopWordRemover/       StopWordRemover, StopWordRemoverFactory, data/stop-words.txt
 
 tests/
 ├── UnitTests/             per-modul (dictionary, cache, context, visitor, disambiguator, …)
@@ -217,9 +220,9 @@ Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dar
   ```bash
   python -m unittest tests/UnitTests/Stemmer/stemmer_test.py -v
   ```
-- **Status saat ini**: **178 test lulus**.
-- Cakupan: aturan disambiguator 1–42, pipeline Context, visitor, dictionary, cache hit/miss, validasi input (`TypeError`/`ValueError`), stop word remover, fungsional + integrasi (pakai `subTest`).
-- Catatan: karena `Sastrawi` berlokasi di `src/`, test dijalankan dengan paket ter-install (`pip install -e .`) atau `PYTHONPATH=src`.
+- **Status saat ini**: **187 test lulus**.
+- Cakupan: aturan disambiguator 1–42, pipeline Context, visitor, dictionary, cache hit/miss + **konkurensi**, validasi input (`TypeError`/`ValueError`), stop word remover, **konstruksi `VisitorProvider`**, fungsional + integrasi (pakai `subTest`).
+- Catatan: karena `Sastrawi` berlokasi di `src/`, test dijalankan dengan paket ter-install (`uv pip install -e .`) atau `PYTHONPATH=src`.
 
 ---
 
@@ -230,22 +233,20 @@ Artifak Visual Studio (`Sastrawi.sln`, `*.pyproj`, `*.vs/`) **bukan** bagian dar
 - **Interface (`*Interface.py`) tidak memakai `abc.ABC`** — metode hanya `pass`. Didefer (breaking change).
 - **Naming campuran camelCase/snake_case** — warisan port PHP, mis. `normalizedText` vs `current_word`. Refactor breaking didefer ke major version.
 - **`Context.restore_prefix()`** memakai `removals[0]` (bukan loop-and-break).
-- **Cache `ArrayCache` tidak thread-safe** — tidak didokumentasikan untuk penggunaan lintas thread.
-- **Tanpa `__all__`** di semua modul.
+- **Cache `ArrayCache` thread-safe** — operasi `set/get/has` dilindungi `threading.Lock`.
+- **`__all__`** ada pada modul kelas publik (`StemmerFactory`, `Stemmer`, `CachedStemmer`, `StopWordRemover`, `StopWordRemoverFactory`, `ArrayDictionary`, `ArrayCache`); `__init__.py` tetap kosong.
+- **Daftar visitor `VisitorProvider` dibekukan** sebagai `tuple` (urutan pipeline tidak berubah).
 
 ---
 
 ## 10. Status & Item Terdefer
 
-Semua perbaikan audit (H1–H4, M1–M8, L1–L10, perbaikan test) yang ditandai FIXED sudah dikerjakan. Item yang sengaja didefer:
+Perbaikan audit (H1–H4, M1–M8, L1–L10, perbaikan test) yang ditandai FIXED sudah dikerjakan. Tambahan yang sudah diselesaikan via [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md): thread-safe `ArrayCache` (L8), `VisitorProvider` → `tuple` (M7), docstring asli (L1), `__all__` publik, stop words ke data file (L7), dan dokumentasi `kata-dasar.original.txt` (M8).
+
+Item yang **sengaja didefer**:
 
 | Item | Alasan |
 |------|--------|
 | Refactor penamaan camelCase → snake_case (L2) | Breaking public API; untuk major version |
-| Stop words ke data file (L7) | Daftar inline berfungsi; dampak rendah |
-| `InvalidAffixPairSpecification` (M3) | Dead code ber-test; dipertahankan sebagai utilitas |
 | Migrasi interface ke ABC (M5) | Breaking untuk subclass; prioritas rendah |
-| `VisitorProvider` mutable lists (M7) | Aman saat ini |
-| Dokumentasi `kata-dasar.original.txt` (M8) | Butuh analisis linguistik |
-| Thread-safety `ArrayCache` (L8) | Keputusan arsitektural |
-| Ekspor `__all__` | Nice-to-have |
+| `InvalidAffixPairSpecification` (M3) | Dead code ber-test; dipertahankan sebagai utilitas |

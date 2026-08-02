@@ -1,3 +1,5 @@
+__all__ = ['StopWordRemover']
+
 class StopWordRemover:
     """Remove stop words from a text using a dictionary of stop words."""
 

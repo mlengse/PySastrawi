@@ -2,6 +2,8 @@ from Sastrawi.Stemmer.Cache.CacheInterface import CacheInterface
 from collections import OrderedDict
 from threading import Lock
 
+__all__ = ['ArrayCache']
+
 class ArrayCache(CacheInterface):
     """In-memory cache with LRU eviction policy, safe for concurrent use."""
 
