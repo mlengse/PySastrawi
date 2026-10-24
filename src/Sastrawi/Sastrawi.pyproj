@@ -116,6 +116,9 @@
     <Compile Include="Morphology\Disambiguator\DisambiguatorPrefixRule32.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Morphology\Disambiguator\DisambiguatorPrefixRule33.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Morphology\Disambiguator\DisambiguatorPrefixRule34.py">
       <SubType>Code</SubType>
     </Compile>

@@ -36,6 +36,7 @@ from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule29 import Disambig
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule30 import DisambiguatorPrefixRule30a, DisambiguatorPrefixRule30b, DisambiguatorPrefixRule30c
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule31 import DisambiguatorPrefixRule31a, DisambiguatorPrefixRule31b
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule32 import DisambiguatorPrefixRule32
+from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule33 import DisambiguatorPrefixRule33
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule34 import DisambiguatorPrefixRule34
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule35 import DisambiguatorPrefixRule35
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule36 import DisambiguatorPrefixRule36
@@ -111,6 +112,7 @@ class VisitorProvider:
 
         self.prefix_visitors.append(PrefixDisambiguator([DisambiguatorPrefixRule31a(), DisambiguatorPrefixRule31b()]))
         self.prefix_visitors.append(PrefixDisambiguator([DisambiguatorPrefixRule32()]))
+        self.prefix_visitors.append(PrefixDisambiguator([DisambiguatorPrefixRule33()]))
         self.prefix_visitors.append(PrefixDisambiguator([DisambiguatorPrefixRule34()]))
 
         #CS additional rules
