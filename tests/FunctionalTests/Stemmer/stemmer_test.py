@@ -16,7 +16,7 @@ class TestStemmer(unittest.TestCase):
                 'minum', 'pukul',
                 'cinta', 'dua', 'dahulu', 'jauh', 'jarah', 'ziarah',
                 'nuklir', 'nasihat', 'gila', 'hajar', 'qasar', 'udara',
-                'populer', 'warna', 'yoga', 'adil', 'rumah', 'muka', 'labuh', 'tarung',
+                'populer', 'warna', 'yoga', 'adil', 'rumah', 'muka', 'labuh', 'tarung', 'erat', 'erang',
                 'tebar', 'indah', 'daya', 'untung', 'sepuluh', 'ekonomi', 'makmur', 'telah', 'serta',
                 'percaya', 'pengaruh', 'kritik', 'seko', 'sekolah', 'tahan', 'capa', 'capai',
                 'mula', 'mulai', 'petan', 'tani', 'aba', 'abai', 'balas', 'balik',
@@ -225,7 +225,8 @@ class TestStemmer(unittest.TestCase):
         data.append(['pelabuhan', 'labuh'])
 
         # rule 33 : peCerV -> per-erV where C != {r|w|y|l|m|n}
-        # TODO : find the examples
+        data.append(['pecerat', 'erat'])
+        data.append(['pegerang', 'erang'])
 
         # rule 34 : peCP -> pe-CP where C != {r|w|y|l|m|n} and P != 'er'
         data.append(['petarung', 'tarung'])

@@ -30,6 +30,7 @@ from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule29 import Disambig
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule30 import DisambiguatorPrefixRule30a, DisambiguatorPrefixRule30b, DisambiguatorPrefixRule30c
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule31 import DisambiguatorPrefixRule31a, DisambiguatorPrefixRule31b
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule32 import DisambiguatorPrefixRule32
+from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule33 import DisambiguatorPrefixRule33
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule34 import DisambiguatorPrefixRule34
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule35 import DisambiguatorPrefixRule35
 from Sastrawi.Morphology.Disambiguator.DisambiguatorPrefixRule36 import DisambiguatorPrefixRule36
@@ -272,6 +273,11 @@ class TestDisambiguatorPrefixRules(unittest.TestCase):
     def test_rule32(self):
         self.assertDisambiguates(DisambiguatorPrefixRule32(), 'pelajar', 'ajar')
         self.assertDisambiguates(DisambiguatorPrefixRule32(), 'pelabuhan', 'labuhan')
+
+    # Rule 33: peCerV -> per-erV where C != {r|w|y|l|m|n}
+    def test_rule33(self):
+        self.assertDisambiguates(DisambiguatorPrefixRule33(), 'pecerat', 'erat')
+        self.assertDisambiguates(DisambiguatorPrefixRule33(), 'pegerang', 'erang')
 
     # Rule 34: peCP -> pe-CP where C != {r|w|y|l|m|n} and P != 'er'
     def test_rule34(self):
