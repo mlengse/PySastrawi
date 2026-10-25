@@ -26,7 +26,7 @@ class TestStemmer(unittest.TestCase):
                 'budaya', 'karya', 'ideal', 'final',
                 # sastrawi additional rules
                 'taat', 'tiru', 'sepak', 'kuasa', 'malaikat', 'nikmat', 'stabil', 'transkripsi',
-                'lewat', 'nganga', 'allah',
+                'lewat', 'nganga', 'allah', 'bagai', 'bagian', 'badan',
             ]
         )
         self.stemmer = Stemmer(self.dictionary)
@@ -340,11 +340,10 @@ class TestStemmer(unittest.TestCase):
         data.append(['memberikan', 'beri'])
         data.append(['medannya', 'medan'])
 
-        # TODO:
-        #data.append(['sebagai', 'bagai'])
-        #data.append(['bagian', 'bagian'])
-        #data.append(['berbadan', 'badan'])
-        #data.append(['abdullah', 'abdullah'])
+        data.append(['sebagai', 'bagai'])
+        data.append(['bagian', 'bagian'])
+        data.append(['berbadan', 'badan'])
+        data.append(['abdullah', 'abdullah'])
 
         # adopted foreign suffixes
         #data.append(['budayawan', 'budaya'])
